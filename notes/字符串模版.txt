@@ -1,0 +1,14 @@
+JS字符串模版
+  $('#result').append(
+    'There are <b>' + basket.count + '</b> ' +
+    'items in your basket, ' +
+    '<em>' + basket.onSale +
+    '</em> are on sale!'
+  );
+ES6字符串模版
+模版字符串是增强版的字符串，用反引号（`）标识，嵌入变量时需写在${}中
+  $('#result').append(`
+    There are <b>${basket.count}</b> items
+     in your basket, <em>${basket.onSale}</em>
+    are on sale!
+  `);

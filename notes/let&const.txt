@@ -1,0 +1,27 @@
+﻿
+1、变量声明 let和const
+  es5通过var来声明变量，es6通过let和const声明（let表示变量，const表示常量，且都是块级作用域）
+    es5 var声明会将函数变量提升到函数的最顶部
+    es6 let不存在变量提升，也不允许重复声明，let只在声明所在的块级作用域内有效
+      es5for循环
+        var a = [];
+        for (var i = 0; i < 10; i++) {
+          a[i] = function () {
+            console.log(i);
+          };
+        }
+        a[6](); // 10
+
+      es6for循环
+        var a = [];
+        for (let i = 0; i < 10; i++) {
+          a[i] = function () {
+            console.log(i);
+          };
+        }
+        a[6](); // 6
+    es6 const不存在变量提升，也不允许重复声明；一旦声明，不能重新赋值，否则报错；只声明不赋值，也会报错；const只在声明所在的块级作用域内有效
+
+  ES6声明变量的6种方法
+    var 、let、const、function、import、class
+
