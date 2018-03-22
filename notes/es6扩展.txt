@@ -41,3 +41,37 @@
     // 返回 "Hi\\u000A!"
     String.raw({ raw: 'test' }, 0, 1, 2);
     // 返回 't0e1s2t'
+
+2、数组的扩展
+  Number.isFinite() 检查一个数值是否为有限的
+    Number.isFinite(15); // true
+    Number.isFinite('15'); // false
+  Number.isNaN() 检查一个值是否为NaN
+    Number.isNaN(NaN) // true
+    Number.isNaN(15) // false
+  Number.isFinite()对于非数值一律返回false, Number.isNaN()只有对于NaN才返回true，非NaN一律返回false。
+  Number.parseInt()
+    Number.parseInt('12.34') // 12
+  Number.parseFloat()
+    Number.parseFloat('123.45#') // 123.45
+  Number.isInteger() 用来判断一个数值是否为整数
+
+  Math.trunc() 去除一个数的小数部分，返回整数部分
+    Math.trunc(4.9) // 4
+    Math.trunc('123.456') // 123
+  Math.sign() 判断一个数到底是正数、负数、还是零
+    参数为正数，返回+1；
+    参数为负数，返回-1；
+    参数为 0，返回0；
+    参数为-0，返回-0;
+    其他值，返回NaN。
+  
+3、函数的扩展
+  ES6为函数的参数设置默认值
+    function log(x, y = 'World') {
+      console.log(x, y);
+    }
+
+    log('Hello') // Hello World
+    log('Hello', 'China') // Hello China
+    log('Hello', '') // Hello
