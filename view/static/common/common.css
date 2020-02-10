@@ -1,0 +1,15 @@
+#node_folder > ul li{
+    list-style: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+#node_folder > ul li a{
+    color: #777!important;
+}
+#node_folder > ul i{
+    font-size: 20px;
+    margin-right: 5px
+}
+#node_folder > ul .glyphicon-folder-close{
+    color: #f5d531;
+}
