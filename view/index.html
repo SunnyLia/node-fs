@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>文件夹</title>
-    <link rel="stylesheet" href="./static/common/common.css">
-    <link rel="stylesheet" href="./static/common/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/common/common.css">
+    <link rel="stylesheet" href="/static/common/bootstrap.min.css">
 
 </head>
 
@@ -40,38 +40,43 @@
             <li class="active">Data</li>
         </ol>
         <ul id="foldList">
-            <li><a><i class="glyphicon glyphicon-picture"></i>5.jpg</a></li>
-            <li><a><i class="glyphicon glyphicon-file"></i>bootstrap.min.css</a></li>
-            <li><a><i class="glyphicon glyphicon-folder-close"></i>static</a></li>
+
         </ul>
     </div>
-    <script src="./static/common/jquery-1.11.3.min.js"></script>
-    <script src="./static/common/bootstrap.min.js"></script>
+    <script src="/static/common/jquery-1.11.3.min.js"></script>
+    <script src="/static/common/bootstrap.min.js"></script>
     <script>
-        $.ajax({
-            url:'/all',
-            method:'get',
-            success:(res)=>{
-                if(res.data){
-                    var str = "";
-                    for (let i = 0; i < res.data.length; i++) {
-                        var item = res.data[i];
-                        if(item.isFold){
-                            str+='<li><a href="'+item.dir+'"><i class="glyphicon glyphicon-folder-close"></i>'+item.foldName+'</a></li>'
-                        }else{
-                            var type= item.type;
-                            if(type == '.jpg' || type == '.png' || type=='.gif'){
-                                str+='<li><a href="'+item.dir+'" target="_blank"><i class="glyphicon glyphicon-picture"></i>'+item.foldName+'</a></li>'
-                            }else{
-                                str+='<li><a href="'+item.dir+'" target="_blank"><i class="glyphicon glyphicon-file"></i>'+item.foldName+'</a></li>'
-                            }
-                        }
+        getFileList();
+
+        function getFileList() {
+            $.ajax({
+                url: '/index.htm',
+                method: 'get',
+                data: { dir: decodeURI(location.pathname) },
+                success: (res) => {
+                    if (res.data) {
+                        addList(res)
                     }
-                    $("#foldList").html(str)
+                }
+            })
+        }
+
+        function addList(res) {
+            var str = "";
+            for (let i = 0; i < res.data.length; i++) {
+                var item = res.data[i];
+                if (item.isFold) {
+                    str += '<li><a href="' + item.dir + '/"><i class="glyphicon glyphicon-folder-close"></i>' + item.foldName + '</a></li>'
+                } else {
+                    if (item.type == '.jpg' || item.type == '.png' || item.type == '.gif') {
+                        str += '<li><a href="/static' + item.dir + '" target="_blank"><i class="glyphicon glyphicon-picture"></i>' + item.foldName + '</a></li>'
+                    } else {
+                        str += '<li><a href="/static' + item.dir + '" target="_blank"><i class="glyphicon glyphicon-file"></i>' + item.foldName + '</a></li>'
+                    }
                 }
             }
-        })
-    
+            $("#foldList").html(str)
+        }
     </script>
 </body>
 
