@@ -34,31 +34,42 @@
                 </div>
             </div>
         </nav>
-        <ol class="breadcrumb">
-            <li><a href="#">全部</a></li>
-            <li><a href="#">Library</a></li>
-            <li class="active">Data</li>
-        </ol>
-        <ul id="foldList">
-
-        </ul>
+        <ol class="breadcrumb"></ol>
+        <ul id="foldList"></ul>
     </div>
     <script src="/static/common/jquery-1.11.3.min.js"></script>
     <script src="/static/common/bootstrap.min.js"></script>
     <script>
+        var url = decodeURI(location.pathname);
         getFileList();
+        getBreadcrumb();
 
         function getFileList() {
             $.ajax({
                 url: '/index.htm',
                 method: 'get',
-                data: { dir: decodeURI(location.pathname) },
+                data: { dir: url },
                 success: (res) => {
                     if (res.data) {
                         addList(res)
                     }
                 }
             })
+        }
+
+        function getBreadcrumb() {
+            var items = url.split("/");
+            var str = '';
+            for (let i = 0; i < items.length - 1; i++) {
+                if (i == 0) {
+                    str += '<li><a href="/">全部</a></li>'
+                } else if (i == items.length - 2) {
+                    str += '<li class="active">' + items[i] + '</li>'
+                } else {
+                    str += '<li><a href="/' + items[i] + '/">' + items[i] + '</a></li>'
+                }
+            }
+            $(".breadcrumb").html(str)
         }
 
         function addList(res) {
