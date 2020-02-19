@@ -70,18 +70,12 @@
                 </li>
             <% }) %>
         </ul>
-        <%- include('./optJs/menu',{title:'删除'})%>
     </div>
-    <%- include('./optJs/modal',{title:'删除'})%>
     <script src="/static/common/jquery-1.11.3.min.js"></script>
     <script src="/static/common/bootstrap.min.js"></script>
-<script>
-    document.body.oncontextmenu = function(e){
-        $("#menu").show().css({top:e.y,left:e.x});
-        return false
-    }
-
-</script>
+    <%- include('./optEJS/menu',{title1:'删除'})%>
+    <%- include('./optEJS/modal',{title2:'删除'})%>
+    <%- include('./optEJS/script',{title3:'删除'})%>
 </body>
 
 </html>

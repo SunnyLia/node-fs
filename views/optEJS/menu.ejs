@@ -6,3 +6,12 @@
     <li>删除</li>
     <li>重命名</li>
 </ul>
+<script>
+    $("#menu li").on("click", function (e) {
+        var tex = $(e.target).text();
+        var callback =<%= title %>;
+        callback(tex,path);
+        $("#menu").hide();
+    })
+
+</script>
