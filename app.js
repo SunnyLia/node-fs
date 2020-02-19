@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const fs = require("fs");
 const path = require("path");
+const com = require("./views/static/common/common");
 
 app.use(express.static('./views'))
 
@@ -20,12 +21,14 @@ app.all('*', function (req, res) {
             allFold.push({
                 isFold: stats.isDirectory(),
                 foldName: file,
-                type: path.extname(file),
-                dir: path1 + file
+                type: path.extname(file).substr(1).toUpperCase(),
+                dir: path1 + file,
+                date: com.dateFormat(stats.atime),
+                size: (stats.size / 1024).toFixed(2)
             })
         })
         // res.send({ data: allFold })
-        res.render("index", { foldLists: allFold, breadcrumbs: path1.split("/") })
+        res.render("index", { foldLists: allFold, breadcrumbs: path1.split("/"), title: 1 })
     })
 
 });

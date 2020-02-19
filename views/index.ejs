@@ -46,22 +46,65 @@
             <% } %>
         </ol>
         <ul id="foldList">
+            <!-- <% foldLists.forEach(function(item){ %>
+                <li>
+                    <div style="width:50%">
+                        <% if (item.isFold) { %>
+                            <a href="<%= item.dir %>/"><i class="glyphicon glyphicon-folder-close"></i><%= item.foldName %></a>
+                        <% }else{ %>
+                            <% if (item.type == '.jpg' || item.type == '.png' || item.type == '.gif') { %>
+                                <a href="/static<%= item.dir %>" target="_blank"><i class="glyphicon glyphicon-picture"></i><%= item.foldName %></a>
+                            <% }else{ %>
+                                <a href="/static<%= item.dir %>" target="_blank"><i class="glyphicon glyphicon-file"></i><%= item.foldName %></a>
+                            <% } %>
+                        <% } %>
+                    </div>
+                    <div style="width:20%"><%= item.date %></div>
+                    <div style="width:15%"><%= item.type %></div>
+                    <div style="width:15%"><%= item.size %>KB</div>
+                    <div style="clear:both"></div>
+                </li>
+            <% }) %> -->
+
             <% foldLists.forEach(function(item){ %>
-                <% if (item.isFold) { %>
-                    <li><a href="<%= item.dir %>/"><i class="glyphicon glyphicon-folder-close"></i><%= item.foldName %></a></li>
-                <% }else{ %>
-                    <% if (item.type == '.jpg' || item.type == '.png' || item.type == '.gif') { %>
-                        <li><a href="/static<%= item.dir %>" target="_blank"><i class="glyphicon glyphicon-picture"></i><%= item.foldName %></a></li>
-                    <% }else{ %>
-                        <li><a href="/static<%= item.dir %>" target="_blank"><i class="glyphicon glyphicon-file"></i><%= item.foldName %></a></li>
+                <li>
+                    <div style="width:50%">
+                        <% if (item.isFold) { %>
+                            <a href="<%= item.dir %>/"><i class="glyphicon glyphicon-folder-close"></i><%= item.foldName %></a>
+                        <% }else{ %>
+                            <% if (item.type == 'JPG' || item.type == 'PNG' || item.type == 'GIF') { %>
+                                <a href="/static<%= item.dir %>" target="_blank"><i class="glyphicon glyphicon-picture"></i><%= item.foldName %></a>
+                            <% }else{ %>
+                                <a href="/static<%= item.dir %>" target="_blank"><i class="glyphicon glyphicon-file"></i><%= item.foldName %></a>
+                            <% } %>
+                        <% } %>
+                    </div>
+                    <div style="width:20%"><%= item.date %></div>
+                    <% if (!item.isFold) { %>
+                    <div style="width:15%"><%= item.type %></div>
+                    <div style="width:15%"><%= item.size %>KB</div>
                     <% } %>
-                <% } %>
+                    <div style="clear:both"></div>
+                </li>
             <% }) %>
+        </ul>
+        <ul id="menu">
+            <li>打开</li>
+            <li>剪切</li>
+            <li>删除</li>
+            <li>复制</li>
+            <li>重命名</li>
         </ul>
     </div>
     <script src="/static/common/jquery-1.11.3.min.js"></script>
     <script src="/static/common/bootstrap.min.js"></script>
+<script>
+document.body.oncontextmenu=function(e){
+            console.log(e);
+            return false
+        }
 
+</script>
 </body>
 
 </html>
