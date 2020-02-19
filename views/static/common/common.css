@@ -9,6 +9,8 @@ html,body{
 }
 #node_folder > ul li a{
     color: #777!important;
+    display: inline-block;
+    width: 100%;
 }
 #node_folder > ul i{
     font-size: 20px;
@@ -32,7 +34,12 @@ html,body{
 }
 #node_folder > #foldList > li{
     width: 1000px;
+    height: 25px;
+    line-height: 25px;
 }
-#node_folder > #foldList > li>div{
+#node_folder > #foldList > li:hover{
+    background: #d9eaf7
+}
+#node_folder > #foldList > li div{
     float: left;
 }
