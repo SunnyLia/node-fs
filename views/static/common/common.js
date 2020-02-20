@@ -22,25 +22,33 @@ exports.readdir = function (req, res) {
             })
         })
         // res.send({ data: allFold })
-        res.render("index", { foldLists: allFold, breadcrumbs: path1.split("/"), title: callback })
+        res.render("index", { foldLists: allFold, breadcrumbs: path1.split("/") })
     })
 }
+exports.deldir = function (req, res) {
 
+    const path = unescape(req.query.path);
+    const name = unescape(req.query.name);
+    console.log(path);
+    
+    // if(){ // 如果是文件夹
+        // fs.rmdir("./views/static"+ path, function(err,file){
+        //     if (err) {
+        //         res.send({data:2})
+        //         return 
+        //     }
+        //     res.send({data:1})
+        // })
+    // }else{//是文件
+        fs.unlink("./views"+ path, function(err,file){
+            if (err) {
+                res.send({data:2})
+                return 
+            }
+            res.send({data:1})
+        })
+    // }
+}
 const dateFormat = function (date) {
     return moment(date).format('YYYY/MM/DD hh:mm');
-}
-
-const copyFile = function () {
-
-}
-
-const callback = function (tex, path) {
-    console.log(tex, path);
-    if (tex == '打开') {
-    } else if (tex == '复制') {
-    } else if (tex == '粘贴') {
-    } else if (tex == '剪切') {
-    } else if (tex == '删除') {
-    } else if (tex == '重命名') {
-    }
 }

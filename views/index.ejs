@@ -48,18 +48,17 @@
         <ul id="foldList">
             <% foldLists.forEach(function(item){ %>
                 <li>
-                    <a href="<%= item.dir %>/">
-                        <div style="width:50%">
-                            <% if (item.isFold) { %>
-                                <i class="glyphicon glyphicon-folder-close"></i><%= item.foldName %>
-                            <% }else{ %>
-                                <% if (item.type == 'JPG' || item.type == 'PNG' || item.type == 'GIF') { %>
-                                    <i class="glyphicon glyphicon-picture"></i><%= item.foldName %>
-                                <% }else{ %>
-                                    <i class="glyphicon glyphicon-file"></i><%= item.foldName %>
-                                <% } %>
-                            <% } %>
-                        </div>
+                    <% if (item.isFold) { %>
+                        <a href="<%= item.dir %>/" name="<%= item.foldName %>">
+                            <div style="width:50%"><i class="glyphicon glyphicon-folder-close"></i><%= item.foldName %></div>
+                    <% }else{ %>
+                        <a href="/static<%= item.dir %>" name="<%= item.foldName %>">
+                        <% if (item.type == 'JPG' || item.type == 'PNG' || item.type == 'GIF') { %>
+                            <div style="width:50%"><i class="glyphicon glyphicon-picture"></i><%= item.foldName %></div>
+                        <% }else{ %>
+                            <div style="width:50%"><i class="glyphicon glyphicon-file"></i><%= item.foldName %></div>
+                        <% } %>
+                    <% } %>
                         <div style="width:20%"><%= item.date %></div>
                         <% if (!item.isFold) { %>
                         <div style="width:15%"><%= item.type %></div>
@@ -70,12 +69,65 @@
                 </li>
             <% }) %>
         </ul>
+        <ul id="menu">
+            <li>打开</li>
+            <li>复制</li>
+            <li>粘贴</li>
+            <li>剪切</li>
+            <li>删除</li>
+            <li>重命名</li>
+        </ul>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">删除文件</h4>
+                </div>
+                <div class="modal-body">
+                    <p>确定是要删除此文件嘛？</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="delForAjax()">确定</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
     </div>
     <script src="/static/common/jquery-1.11.3.min.js"></script>
     <script src="/static/common/bootstrap.min.js"></script>
-    <%- include('./optEJS/menu',{title1:'删除'})%>
-    <%- include('./optEJS/modal',{title2:'删除'})%>
-    <%- include('./optEJS/script',{title3:'删除'})%>
+    <script>
+        var path="/",name="";
+        $("#foldList").on("contextmenu", "li", function (e) {
+            path = $(e.currentTarget).find("a").attr("href"); //获取到当前路径
+            name = $(e.currentTarget).find("a").attr("name"); //获取到文件名
+            
+            $("#menu").show().css({ top: e.clientY, left: e.clientX });
+            return false
+        })
+        $("#menu li").on("click", function (e) {
+            var tex = $(e.target).text();
+            if (tex == "打开") {
+                window.open(path)
+            } else if (tex == "复制") {
+            } else if (tex == "粘贴") {
+            } else if (tex == "剪切") {
+            } else if (tex == "删除") {
+                $('.modal').modal('toggle')
+            } else if (tex == "重命名") {
+            }
+            $("#menu").hide();
+        })
+        function delForAjax(){
+            console.log(path,name);
+            $.get("/deldir",{path:escape(path),name:escape(name)},function(data){
+                
+            })
+            $('.modal').modal('toggle')
+        }
+    </script>
 </body>
 
 </html>
