@@ -33,7 +33,22 @@ exports.deldir = function (req, res) {
     if (path.indexOf("/static") == -1) {
         path = "/static" + path
     }
-    delfile("./views" + path, res)
+    try{
+        delfile("./views" + path, res);
+        res.send({code:1})
+    }catch{
+        res.send({code:"哎呀，删除时报错啦"})
+    }
+}
+exports.rename = function(req,res){
+    let oldPath = unescape(req.query.oldPath);
+    let newPath = unescape(req.query.newPath);
+    try{
+        fs.renameSync("./views"+oldPath, "./views"+newPath);
+        res.send({code:1})
+    }catch{
+        res.send({code:"哎呀，重命名时报错啦"})
+    }
 }
 const delfile = function (path) {
     // 先判断此文件是文件夹还是文件

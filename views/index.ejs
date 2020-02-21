@@ -47,16 +47,16 @@
         </ol>
         <ul id="foldList">
             <% foldLists.forEach(function(item){ %>
-                <li>
+                <!-- <li> -->
                     <% if (item.isFold) { %>
-                        <a href="<%= item.dir %>/" name="<%= item.foldName %>">
-                            <div style="width:50%"><i class="glyphicon glyphicon-folder-close"></i><span><%= item.foldName %></span></div>
+                        <li href="<%= item.dir %>/" name="<%= item.foldName %>">
+                            <div style="width:50%"><i class="glyphicon glyphicon-folder-close"></i><span><%= item.foldName %></span><input class="default" type="text" value="<%= item.foldName %>"></div>
                     <% }else{ %>
-                        <a href="/static<%= item.dir %>" name="<%= item.foldName %>">
+                        <li href="/static<%= item.dir %>" name="<%= item.foldName %>">
                         <% if (item.type == 'JPG' || item.type == 'PNG' || item.type == 'GIF') { %>
-                            <div style="width:50%"><i class="glyphicon glyphicon-picture"></i><span><%= item.foldName %></span></div>
+                            <div style="width:50%"><i class="glyphicon glyphicon-picture"></i><span><%= item.foldName %></span><input class="default" type="text" value="<%= item.foldName %>"></div>
                         <% }else{ %>
-                            <div style="width:50%"><i class="glyphicon glyphicon-file"></i><span><%= item.foldName %></span></div>
+                            <div style="width:50%"><i class="glyphicon glyphicon-file"></i><span><%= item.foldName %></span><input class="default" type="text" value="<%= item.foldName %>"></div>
                         <% } %>
                     <% } %>
                         <div style="width:20%"><%= item.date %></div>
@@ -65,8 +65,8 @@
                         <div style="width:15%"><%= item.size %>KB</div>
                         <% } %>
                         <div style="clear:both"></div>
-                    </a>
-                </li>
+                    </ll>
+                <!-- </li> -->
             <% }) %>
         </ul>
         <ul id="menu">
@@ -100,12 +100,17 @@
     <script src="/static/common/bootstrap.min.js"></script>
     <script>
         var path="/",name="";
+        //鼠标右击
         $("#foldList").on("contextmenu", "li", function (e) {
-            path = $(e.currentTarget).find("a").attr("href"); //获取到当前路径
-            name = $(e.currentTarget).find("a").attr("name"); //获取到文件名
+            path = $(e.currentTarget).attr("href"); //获取到当前路径
+            name = $(e.currentTarget).attr("name"); //获取到文件名
             
             $("#menu").show().css({ top: e.clientY, left: e.clientX });
             return false
+        })
+        //鼠标双击
+        $("#foldList").on("dblclick", "li", function (e) {
+            window.location.href = $(e.currentTarget).attr("href")
         })
         $("#menu li").on("click", function (e) {
             var tex = $(e.target).text();
@@ -117,9 +122,23 @@
             } else if (tex == "删除") {
                 $('.modal').modal('toggle')
             } else if (tex == "重命名") {
+                // document.onkeydown=function(ev){
+                //     var event=ev ||event
+                //     if(event.keyCode==13){
+                //          copyForAjax()
+                //     }
+                // }
             }
             $("#menu").hide();
         })
+        function copyForAjax(){
+            $.get("/rename",{oldPath:escape(path),newPath:escape(name)},function(data){
+                if(data.code != 1){
+                    alert(data.code)
+                }
+                window.location.reload() 
+            })
+        }
         function delForAjax(){
             $.get("/deldir",{path:escape(path),name:escape(name)},function(data){
                 if(data.code != 1){

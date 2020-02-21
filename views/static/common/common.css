@@ -7,7 +7,7 @@ ul li{
     font-size: 16px;
     cursor: pointer;
 }
-#node_folder > ul li a{
+#node_folder > ul li{
     color: #777!important;
     display: inline-block;
     width: 100%;
@@ -42,4 +42,9 @@ ul li{
 }
 #node_folder > #foldList > li div{
     float: left;
+}
+#foldList .default{
+    border: 0;
+    background: transparent;
+    display: none;
 }
