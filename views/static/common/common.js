@@ -26,28 +26,30 @@ exports.readdir = function (req, res) {
     })
 }
 exports.deldir = function (req, res) {
+    //文件夹 ==> /images/GIF表情 - 副本/
+    //文件 ==> /static/images/404 - 副本.jpg
 
-    const path = unescape(req.query.path);
-    const name = unescape(req.query.name);
-    console.log(path);
-    
-    // if(){ // 如果是文件夹
-        // fs.rmdir("./views/static"+ path, function(err,file){
-        //     if (err) {
-        //         res.send({data:2})
-        //         return 
-        //     }
-        //     res.send({data:1})
-        // })
-    // }else{//是文件
-        fs.unlink("./views"+ path, function(err,file){
-            if (err) {
-                res.send({data:2})
-                return 
-            }
-            res.send({data:1})
+    let path = unescape(req.query.path);
+    if (path.indexOf("/static") == -1) {
+        path = "/static" + path
+    }
+    delfile("./views" + path, res)
+}
+const delfile = function (path) {
+    // 先判断此文件是文件夹还是文件
+    var stat = fs.statSync(path);
+    if (stat.isDirectory()) { // 是文件夹
+        // 先获取到文件夹里所有的文件
+        var files = fs.readdirSync(path)
+        // 遍历文件再递归删除
+        files.forEach(function (file) {
+            delfile(path + file)
         })
-    // }
+        fs.rmdirSync(path);
+    } else {//是文件
+        // 直接删除该文件
+        fs.unlinkSync(path)
+    }
 }
 const dateFormat = function (date) {
     return moment(date).format('YYYY/MM/DD hh:mm');
