@@ -101,7 +101,8 @@
     <script>
         var path="/",name="";
         var copyPath = localStorage.getItem("copyPath");
-        if(copyPath){
+        var clipPath = localStorage.getItem("clipPath");
+        if(copyPath || clipPath){
             $("#paste").removeClass("active")
         }else{
             $("#paste").addClass("active")
@@ -128,17 +129,25 @@
             if (tex == "打开") {
                 window.open(path)
             } else if (tex == "复制") {
-                localStorage.setItem("copyPath",path)
+                localStorage.setItem("copyPath",path);
+                localStorage.removeItem("clipPath");
                 window.location.reload() 
             } else if (tex == "粘贴") {
                 if(copyPath){
                     pasteForAjax(function(){
                         localStorage.removeItem("copyPath");
                     });
+                }else if(clipPath){
+                    clipForAjax(function(){
+                        localStorage.removeItem("clipPath");
+                    });
                 }else{
                     return;
                 }
             } else if (tex == "剪切") {
+                localStorage.removeItem("copyPath");
+                localStorage.setItem("clipPath",path)
+                window.location.reload() 
             } else if (tex == "删除") {
                 $('.modal').modal('toggle')
             } else if (tex == "重命名") {
@@ -170,7 +179,16 @@
         }
         function pasteForAjax(callback){
             $.get("/paste",{copyPath:escape(copyPath),pasteDir:escape(decodeURI(location.pathname))},function(data){
-                
+                if(data.code != 1){
+                    alert(data.code)
+                }else{
+                    callback()
+                }
+                window.location.reload() 
+            })
+        }
+        function clipForAjax(callback){
+            $.get("/clip",{clipPath:escape(clipPath),pasteDir:escape(decodeURI(location.pathname))},function(data){
                 if(data.code != 1){
                     alert(data.code)
                 }else{

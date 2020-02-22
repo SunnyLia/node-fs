@@ -3,7 +3,9 @@ const fs = require("fs");
 const path = require("path");
 
 exports.readdir = function (req, res) {
+
     var path1 = decodeURI(req.path);
+    if (path1 == "/favicon.ico") { return }
     fs.readdir("./views/static" + path1, function (err, files) {
         const allFold = [];
         if (err) {
@@ -70,6 +72,17 @@ exports.paste = function (req, res) {
         })
 
         pasteFile("./views" + copyPath, "./views/static" + pasteDir + name);
+        res.send({ code: 1 })
+    } catch{
+        res.send({ code: "哎呀，粘贴时报错啦" })
+    }
+}
+exports.clip = function (req, res) {
+    let clipPath = unescape(req.query.clipPath);//被剪切的文件路径  
+    let pasteDir = unescape(req.query.pasteDir);//粘贴的文件夹位置 
+    let name = path.basename("./views" + clipPath);
+    try {
+        fs.renameSync("./views" + clipPath, "./views/static" + pasteDir + name);
         res.send({ code: 1 })
     } catch{
         res.send({ code: "哎呀，粘贴时报错啦" })
