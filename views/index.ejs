@@ -72,7 +72,7 @@
         <ul id="menu">
             <li>打开</li>
             <li>复制</li>
-            <li>粘贴</li>
+            <li class="active" id="paste">粘贴</li>
             <li>剪切</li>
             <li>删除</li>
             <li>重命名</li>
@@ -100,11 +100,21 @@
     <script src="/static/common/bootstrap.min.js"></script>
     <script>
         var path="/",name="";
+        var copyPath = localStorage.getItem("copyPath");
+        if(copyPath){
+            $("#paste").removeClass("active")
+        }else{
+            $("#paste").addClass("active")
+        }
+
         //鼠标右击
         $("#foldList").on("contextmenu", "li", function (e) {
             path = $(e.currentTarget).attr("href"); //获取到当前路径
+            if (path.indexOf("/static") == -1) {
+                path = "/static" + path
+            }
             name = $(e.currentTarget).attr("name"); //获取到文件名
-            
+            $(this).addClass("active").siblings().removeClass("active");
             $("#menu").show().css({ top: e.clientY, left: e.clientX });
             return false
         })
@@ -112,27 +122,37 @@
         $("#foldList").on("dblclick", "li", function (e) {
             window.location.href = $(e.currentTarget).attr("href")
         })
+        //菜单选择
         $("#menu li").on("click", function (e) {
             var tex = $(e.target).text();
             if (tex == "打开") {
                 window.open(path)
             } else if (tex == "复制") {
+                localStorage.setItem("copyPath",path)
+                window.location.reload() 
             } else if (tex == "粘贴") {
+                if(copyPath){
+                    pasteForAjax(function(){
+                        localStorage.removeItem("copyPath");
+                    });
+                }else{
+                    return;
+                }
             } else if (tex == "剪切") {
             } else if (tex == "删除") {
                 $('.modal').modal('toggle')
             } else if (tex == "重命名") {
-                // document.onkeydown=function(ev){
-                //     var event=ev ||event
-                //     if(event.keyCode==13){
-                //          copyForAjax()
-                //     }
-                // }
+                var actInput = $("#foldList .active").find("input");
+                actInput.show().focus().prev().hide();
+                actInput.blur(function(){
+                    var newPath = path.replace(name,actInput.val());
+                    renameForAjax(newPath)
+                });
             }
             $("#menu").hide();
         })
-        function copyForAjax(){
-            $.get("/rename",{oldPath:escape(path),newPath:escape(name)},function(data){
+        function renameForAjax(newPath){
+            $.get("/rename",{oldPath:escape(path),newPath:escape(newPath)},function(data){
                 if(data.code != 1){
                     alert(data.code)
                 }
@@ -147,6 +167,19 @@
                 window.location.reload() 
             })
             $('.modal').modal('toggle')
+        }
+        function pasteForAjax(callback){
+            console.log(copyPath);
+            console.log(location.pathname);
+            
+            $.get("/paste",{copyPath:escape(copyPath),pasteDir:escape(decodeURI(location.pathname))},function(data){
+                if(data.code != 1){
+                    alert(data.code)
+                }else{
+                    callback()
+                }
+                window.location.reload() 
+            })
         }
     </script>
 </body>

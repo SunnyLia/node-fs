@@ -5,7 +5,7 @@ html,body{
 ul li{
     list-style: none;
     font-size: 16px;
-    cursor: pointer;
+    cursor: default;
 }
 #node_folder > ul li{
     color: #777!important;
@@ -37,14 +37,20 @@ ul li{
     height: 25px;
     line-height: 25px;
 }
-#node_folder > #foldList > li:hover{
+#node_folder > #foldList > li:hover, #foldList > li.active{
     background: #d9eaf7
 }
 #node_folder > #foldList > li div{
     float: left;
 }
 #foldList .default{
-    border: 0;
+    height: 27px;
     background: transparent;
     display: none;
+}
+#menu .active{
+    color:#b3b1b1!important;
+}
+#menu .active:hover{
+    background: transparent!important;
 }

@@ -6,6 +6,8 @@ app.use(express.static('./views'))
 
 app.set("view engine", "ejs");
 app.get('/deldir',com.deldir);
+app.get('/rename',com.rename);
+app.get('/paste',com.paste);
 app.all('*',com.readdir);
 
 app.listen("8081", () => {
