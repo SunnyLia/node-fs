@@ -169,10 +169,8 @@
             $('.modal').modal('toggle')
         }
         function pasteForAjax(callback){
-            console.log(copyPath);
-            console.log(location.pathname);
-            
             $.get("/paste",{copyPath:escape(copyPath),pasteDir:escape(decodeURI(location.pathname))},function(data){
+                
                 if(data.code != 1){
                     alert(data.code)
                 }else{

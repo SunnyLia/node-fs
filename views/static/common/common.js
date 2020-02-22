@@ -52,38 +52,40 @@ exports.rename = function (req, res) {
 exports.paste = function (req, res) {
     let copyPath = unescape(req.query.copyPath);//被复制的文件路径   /static/images/你好.jpg
     let pasteDir = unescape(req.query.pasteDir);//粘贴的文件夹位置  /images/GIF表情包/
-    let name = path.basename("./views" + copyPath)
+    let name = path.basename("./views" + copyPath);
 
-    let isDir = fs.statSync("./views" + copyPath).isDirectory(); //判断被复制的是文件夹还是文件
-
-    // 如果粘贴的路径里有和被复制的同名，则粘贴的文件后加"-副本";
-    let files = fs.readdirSync("./views/static" + pasteDir);
-    files.forEach(function (file) {
-        if (file == name) {
-            if (isDir) {
-                name = name + '-副本';
-            } else {
-                let dot = path.extname("./views" + copyPath);
-                name = name.split(dot)[0] + "-副本" + dot;
+    try {
+        let isDir = fs.statSync("./views" + copyPath).isDirectory(); //判断被复制的是文件夹还是文件
+        // 如果粘贴的路径里有和被复制的同名，则粘贴的文件后加"-副本";
+        let files = fs.readdirSync("./views/static" + pasteDir);
+        files.forEach(function (file) {
+            if (file == name) {
+                if (isDir) {
+                    name = name + '-副本';
+                } else {
+                    let dot = path.extname("./views" + copyPath);
+                    name = name.split(dot)[0] + "-副本" + dot;
+                }
             }
-        }
-    })
+        })
 
-    pasteFile("./views" + copyPath, "./views/static" + pasteDir + name)
+        pasteFile("./views" + copyPath, "./views/static" + pasteDir + name);
+        res.send({ code: 1 })
+    } catch{
+        res.send({ code: "哎呀，粘贴时报错啦" })
+    }
 }
 const pasteFile = function (old, now) {
-    // console.log(old + "-----" + now);
-
     // 先判断复制的是文件还是文件夹
     if (fs.statSync(old).isDirectory()) {
+        let files = fs.readdirSync(old);
         //如果是文件夹,那就需要先创建个空的now文件夹
         fs.mkdirSync(now)
         // 然后遍历old里面所有的文件
-        let files = fs.readdirSync(old);
         files.forEach(function (file) {
+            // 递归判断然后再将文件添加到now里面
             pasteFile(old + "/" + file, now + "/" + file);
         })
-        // 递归判断然后再将文件添加到now里面
     } else {
         // 如果是文件直接写入
         fs.writeFileSync(now, fs.readFileSync(old))
@@ -97,7 +99,7 @@ const delfile = function (path) {
         var files = fs.readdirSync(path)
         // 遍历文件再递归删除
         files.forEach(function (file) {
-            delfile(path + file)
+            delfile(path + "/" + file)
         })
         //最后删除这个空文件夹
         fs.rmdirSync(path);
