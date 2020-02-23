@@ -36,7 +36,8 @@ exports.deldir = function (req, res) {
     try {
         delfile("./views" + path, res);
         res.send({ code: 1 })
-    } catch{
+    } catch (e) {
+        console.error(e);
         res.send({ code: "哎呀，删除时报错啦" })
     }
 }
@@ -47,7 +48,8 @@ exports.rename = function (req, res) {
     try {
         fs.renameSync("./views" + oldPath, "./views" + newPath);
         res.send({ code: 1 })
-    } catch{
+    } catch (e) {
+        console.error(e);
         res.send({ code: "哎呀，重命名时报错啦" })
     }
 }
@@ -73,7 +75,8 @@ exports.paste = function (req, res) {
 
         pasteFile("./views" + copyPath, "./views/static" + pasteDir + name);
         res.send({ code: 1 })
-    } catch{
+    } catch (e) {
+        console.error(e);
         res.send({ code: "哎呀，粘贴时报错啦" })
     }
 }
@@ -84,8 +87,23 @@ exports.clip = function (req, res) {
     try {
         fs.renameSync("./views" + clipPath, "./views/static" + pasteDir + name);
         res.send({ code: 1 })
-    } catch{
+    } catch (e) {
+        console.error(e);
         res.send({ code: "哎呀，粘贴时报错啦" })
+    }
+}
+exports.addFold = function (req, res) {
+    let pasteDir = unescape(req.query.pasteDir);//粘贴的文件夹位置 
+    try {
+        if (req.query.code == 1) {
+            fs.mkdirSync("./views/static" + pasteDir + "新建文件夹")
+        } else {
+            fs.writeFileSync("./views/static" + pasteDir +"新建文本文档.txt")
+        }
+        res.send({ code: 1 })
+    } catch (e) {
+        console.error(e);
+        res.send({ code: "哎呀，新建时报错啦" })
     }
 }
 const pasteFile = function (old, now) {

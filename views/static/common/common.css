@@ -19,17 +19,17 @@ ul li{
 #node_folder > ul .glyphicon-folder-close{
     color: #f5d531;
 }
-#menu{
-    width: 250px;
+#menu,#bodyMenu{
+    width: 200px;
     padding: 5px;
     background: #eceaea;
     position: absolute;
     display: none;
 }
-#menu > li{
-    padding: 2px 20px;
+#menu> li,#bodyMenu li{
+    padding: 2px 0 2px 20px;
 }
-#menu > li:hover{
+#menu> li:hover,#bodyMenu li:hover{
     background: #ccc9c9
 }
 #node_folder > #foldList > li{
@@ -48,9 +48,27 @@ ul li{
     background: transparent;
     display: none;
 }
-#menu .active{
+#bodyMenu .active{
     color:#b3b1b1!important;
 }
-#menu .active:hover{
+#bodyMenu .active:hover{
     background: transparent!important;
+}
+#bodyMenu > li > ul{
+    position: absolute;
+    left: 195px;
+    top: 0;
+    width: 150px;
+    background: #eaeaea;
+    padding: 5px;
+    display: none;
+}
+#bodyMenu > li:first-child:hover ul{
+    display: block;
+}
+#bodyMenu > li > .glyphicon{
+    float: right;
+    font-size: 14px;
+    color: #adabab;
+    margin-top: 3px;
 }

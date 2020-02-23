@@ -72,10 +72,22 @@
         <ul id="menu">
             <li>打开</li>
             <li>复制</li>
-            <li class="active" id="paste">粘贴</li>
-            <li>剪切</li>
+            <!-- <li class="active" id="paste">粘贴</li> -->
+            <li>剪切</li>    
             <li>删除</li>
             <li>重命名</li>
+        </ul>
+        <ul id="bodyMenu">
+            <li>
+                <span>新建</span>
+                <ul>
+                    <li>文件夹</li>
+                    <li>文本文档</li>
+                </ul>
+                <i class="glyphicon glyphicon-menu-right"></i>
+            </li>
+            <li class="active" id="paste">粘贴</li>
+            <li>上传</li>
         </ul>
     </div>
     <div class="modal fade" tabindex="-1" role="dialog">
@@ -107,7 +119,15 @@
         }else{
             $("#paste").addClass("active")
         }
-
+        $("body").click(function(){
+            $("#menu").hide();
+            $("#bodyMenu").hide();
+        })
+        $("body").on("contextmenu", function (e) {
+            $("#menu").hide()
+            $("#bodyMenu").show().css({ top: e.clientY, left: e.clientX });
+            return false;
+        })
         //鼠标右击
         $("#foldList").on("contextmenu", "li", function (e) {
             path = $(e.currentTarget).attr("href"); //获取到当前路径
@@ -116,6 +136,7 @@
             }
             name = $(e.currentTarget).attr("name"); //获取到文件名
             $(this).addClass("active").siblings().removeClass("active");
+            $("#bodyMenu").hide();
             $("#menu").show().css({ top: e.clientY, left: e.clientX });
             return false
         })
@@ -123,15 +144,13 @@
         $("#foldList").on("dblclick", "li", function (e) {
             window.location.href = $(e.currentTarget).attr("href")
         })
-        //菜单选择
-        $("#menu li").on("click", function (e) {
+        $("#bodyMenu li").on("click", function (e) {
+            e.stopPropagation();
             var tex = $(e.target).text();
-            if (tex == "打开") {
-                window.open(path)
-            } else if (tex == "复制") {
-                localStorage.setItem("copyPath",path);
-                localStorage.removeItem("clipPath");
-                window.location.reload() 
+            if (tex == "新建") {
+                return false;
+            } else if (tex == "上传") {
+               
             } else if (tex == "粘贴") {
                 if(copyPath){
                     pasteForAjax(function(){
@@ -144,6 +163,34 @@
                 }else{
                     return;
                 }
+            } else if (tex == "文件夹") {
+                addFoleForAjax(1,function(){});
+            } else if (tex == "文本文档") {
+                addFoleForAjax(0,function(){});
+            }
+            $("#bodyMenu").hide();
+        })
+        //菜单选择
+        $("#menu li").on("click", function (e) {
+            var tex = $(e.target).text();
+            if (tex == "打开") {
+                window.open(path)
+            } else if (tex == "复制") {
+                localStorage.setItem("copyPath",path);
+                localStorage.removeItem("clipPath");
+                window.location.reload() 
+            // } else if (tex == "粘贴") {
+            //     if(copyPath){
+            //         pasteForAjax(function(){
+            //             localStorage.removeItem("copyPath");
+            //         });
+            //     }else if(clipPath){
+            //         clipForAjax(function(){
+            //             localStorage.removeItem("clipPath");
+            //         });
+            //     }else{
+            //         return;
+            //     }
             } else if (tex == "剪切") {
                 localStorage.removeItem("copyPath");
                 localStorage.setItem("clipPath",path)
@@ -193,6 +240,14 @@
                     alert(data.code)
                 }else{
                     callback()
+                }
+                window.location.reload() 
+            })
+        }
+        function addFoleForAjax(code){
+            $.get("/addFold",{code:code,pasteDir:escape(decodeURI(location.pathname))},function(data){
+                if(data.code != 1){
+                    alert(data.code);
                 }
                 window.location.reload() 
             })

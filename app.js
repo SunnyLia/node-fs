@@ -9,6 +9,7 @@ app.get('/deldir',com.deldir);
 app.get('/rename',com.rename);
 app.get('/paste',com.paste);
 app.get('/clip',com.clip);
+app.get('/addFold',com.addFold);
 app.all('*',com.readdir);
 
 app.listen("8081", () => {
