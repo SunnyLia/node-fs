@@ -2,6 +2,8 @@ const moment = require("moment");
 const fs = require("fs");
 const path = require("path");
 
+const formidable = require('formidable');
+
 exports.readdir = function (req, res) {
 
     var path1 = decodeURI(req.path);
@@ -98,12 +100,27 @@ exports.addFold = function (req, res) {
         if (req.query.code == 1) {
             fs.mkdirSync("./views/static" + pasteDir + "新建文件夹")
         } else {
-            fs.writeFileSync("./views/static" + pasteDir +"新建文本文档.txt")
+            fs.writeFileSync("./views/static" + pasteDir + "新建文本文档.txt")
         }
         res.send({ code: 1 })
     } catch (e) {
         console.error(e);
         res.send({ code: "哎呀，新建时报错啦" })
+    }
+}
+exports.upload = function (req, res) {
+    try {
+        let form = new formidable.IncomingForm();
+        form.parse(req, (err, fields, files) => {
+            // form.uploadDir = path.normalize(__dirname + "/upload");
+            let newFile = "./views/static" + fields.pasteDir + files.file.name;
+            let oldFile = files.file.path;
+            fs.writeFileSync(newFile, fs.readFileSync(oldFile))
+        })
+        res.send({ code: 1 })
+    } catch (e) {
+        console.error(e);
+        res.send({ code: "哎呀，上传时报错啦" })
     }
 }
 const pasteFile = function (old, now) {

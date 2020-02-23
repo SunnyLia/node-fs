@@ -23,14 +23,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#">文件夹</a>
-                </div>
-
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#">新建</a></li>
-                        <li><a href="#">上传</a></li>
-                    </ul>
+                    <a class="navbar-brand" href="#">文件夹操作</a>
                 </div>
             </div>
         </nav>
@@ -90,7 +83,7 @@
             <li>上传</li>
         </ul>
     </div>
-    <div class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" id="delModal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -103,6 +96,27 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" onclick="delForAjax()">确定</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" tabindex="-1" role="dialog" id="upModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">上传文件</h4>
+                </div>
+                <div class="modal-body">
+                    <!-- <form action="/upload" method="POST" id="uploadForm" enctype="multipart/form-data"> -->
+                        <p>文件将被上传至当前目录</p>
+                        <input type="file" name="file" id="file">
+                    <!-- </form> -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="upForAjax()">确定</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                 </div>
             </div>
@@ -150,7 +164,7 @@
             if (tex == "新建") {
                 return false;
             } else if (tex == "上传") {
-               
+                $('#upModal').modal('toggle');
             } else if (tex == "粘贴") {
                 if(copyPath){
                     pasteForAjax(function(){
@@ -179,24 +193,12 @@
                 localStorage.setItem("copyPath",path);
                 localStorage.removeItem("clipPath");
                 window.location.reload() 
-            // } else if (tex == "粘贴") {
-            //     if(copyPath){
-            //         pasteForAjax(function(){
-            //             localStorage.removeItem("copyPath");
-            //         });
-            //     }else if(clipPath){
-            //         clipForAjax(function(){
-            //             localStorage.removeItem("clipPath");
-            //         });
-            //     }else{
-            //         return;
-            //     }
             } else if (tex == "剪切") {
                 localStorage.removeItem("copyPath");
                 localStorage.setItem("clipPath",path)
                 window.location.reload() 
             } else if (tex == "删除") {
-                $('.modal').modal('toggle')
+                $('#delModal').modal('toggle')
             } else if (tex == "重命名") {
                 var actInput = $("#foldList .active").find("input");
                 actInput.show().focus().prev().hide();
@@ -222,7 +224,7 @@
                 }
                 window.location.reload() 
             })
-            $('.modal').modal('toggle')
+            $('#delModal').modal('toggle')
         }
         function pasteForAjax(callback){
             $.get("/paste",{copyPath:escape(copyPath),pasteDir:escape(decodeURI(location.pathname))},function(data){
@@ -251,6 +253,26 @@
                 }
                 window.location.reload() 
             })
+        }
+        function upForAjax(){
+            var files = $("#file")[0].files;
+            var formData = new FormData(); 
+            formData.append("file", files[0]); 
+            formData.append("pasteDir", escape(decodeURI(location.pathname))); 
+
+            $.ajax({
+                type: 'POST',
+                url: "/upload",
+                data:formData,
+                processData: false,   // jQuery不要去处理发送的数据
+                contentType: false,   // jQuery不要去设置Content-Type请求头
+                success: function(data){
+                    if(data.code != 1){
+                        alert(data.code)
+                    }
+                    window.location.reload() 
+                }
+            });
         }
     </script>
 </body>
