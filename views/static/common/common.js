@@ -26,7 +26,7 @@ exports.readdir = function (req, res) {
             })
         })
         // res.send({ data: allFold })
-        res.render("index", { foldLists: allFold, breadcrumbs: path1.split("/") })
+        res.render("index", { foldLists: allFold, breadcrumbs: pathArray(path1)})
     })
 }
 exports.deldir = function (req, res) {
@@ -155,6 +155,21 @@ const delfile = function (path) {
         // 直接删除该文件
         fs.unlinkSync(path)
     }
+}
+const pathArray = function(path){
+    var a = []; //这是渲染的文字
+    path.split("/").forEach(function(item){
+        if(item) a.push(item)
+    })
+    var b = [];//这是跳转的路径
+    a.forEach(function(item,index){
+        var tmp = "";
+        for (let i = 0; i <= index; i++) {
+           tmp+= "/"+a[i];
+        }
+        b.push(tmp)
+    })
+    return {word:a,path:b}
 }
 const dateFormat = function (date) {
     return moment(date).format('YYYY/MM/DD hh:mm');
