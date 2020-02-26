@@ -118,8 +118,8 @@ exports.upload = function (req, res) {
     try {
         let form = new formidable.IncomingForm();
         form.parse(req, (err, fields, files) => {
-            // form.uploadDir = path.normalize(__dirname + "/upload");
-            let newFile = "./public" + fields.pasteDir + files.file.name;
+            form.uploadDir = path.normalize(__dirname + "/upload");
+            let newFile = "./public" + unescape(fields.pasteDir) + files.file.name;
             let oldFile = files.file.path;
             fs.writeFileSync(newFile, fs.readFileSync(oldFile))
         })
