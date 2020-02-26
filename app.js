@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
-const com = require("./views/static/common/common");
-app.use(express.static('./views'))
+const com = require("./routers");
+app.use(express.static('./public'))
 app.set("view engine", "ejs");
 app.get('/deldir',com.deldir);
 app.get('/rename',com.rename);
