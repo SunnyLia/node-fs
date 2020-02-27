@@ -1,8 +1,15 @@
 const express = require("express");
 const app = express();
 const com = require("./routers");
+const table = require("./routers/table");
 app.use(express.static('./public'))
 app.set("view engine", "ejs");
+/* table列表 */
+app.get('/table',table.poetry);
+app.get('/query',table.query);
+app.get('/addPoetry',table.addPoetry);
+
+/* 文件操作 */
 app.get('/deldir',com.deldir);
 app.get('/rename',com.rename);
 app.get('/paste',com.paste);

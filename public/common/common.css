@@ -72,3 +72,8 @@ ul li{
     color: #adabab;
     margin-top: 3px;
 }
+.content .form-inline{
+    margin-bottom: 20px;
+    background: #f8f8f8;
+    padding: 20px;
+}

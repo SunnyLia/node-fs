@@ -113,7 +113,7 @@ exports.addFold = function (req, res) {
         res.send({ code: "哎呀，新建时报错啦" })
     }
 }
-//还不行
+
 exports.upload = function (req, res) {
     try {
         let form = new formidable.IncomingForm();
