@@ -7,36 +7,25 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>文件夹</title>
     <link rel="stylesheet" href="/common/common.css">
-    <link rel="stylesheet" href="/common/bootstrap.min.css">
+    <link rel="stylesheet" href="https://res.layui.com/layui/dist/css/layui.css?t=1579809530538">
 
 </head>
 
-<body>
-    <div id="node_folder">
-        <nav class="navbar navbar-default">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="#">文件夹操作</a>
-                </div>
-            </div>
-        </nav>
-        <ol class="breadcrumb"> 
-            <li><a href="/">全部</a></li>
+<body class="layui-layout-body">
+    <div id="node_folder" class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo">文件操作</div>
+        </div> 
+        <span class="layui-breadcrumb">
+            <a href="/">首页</a>
             <% for (let i = 0; i < breadcrumbs.word.length; i++) { %>
                 <% if(i == breadcrumbs.word.length-1){ %>
-                    <li class="active"><%= breadcrumbs.word[i] %></li>
+                    <a><cite><%= breadcrumbs.word[i] %></cite></a>
                 <% }else{ %>
-                    <li><a href="<%= breadcrumbs.path[i] %>/"><%= breadcrumbs.word[i] %></a></li>
+                    <a href="<%= breadcrumbs.path[i] %>/"><%= breadcrumbs.word[i] %></a>
                 <% } %>
             <% } %>
-        </ol>
+        </span>
         <ul id="foldList">
             <% foldLists.forEach(function(item){ %>
                 <!-- <li> -->
@@ -122,7 +111,7 @@
         </div>
     </div>
     <script src="/common/jquery-1.11.3.min.js"></script>
-    <script src="/common/bootstrap.min.js"></script>
+    <script src="https://res.layui.com/layui/dist/layui.js?t=1579809530538"></script>
     <script src="/common/common.js"></script>
 
 </body>
