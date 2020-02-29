@@ -5,141 +5,125 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>文件夹</title>
+    <title>数据操作</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
     <link rel="stylesheet" href="/common/common.css">
-    <link rel="stylesheet" href="/common/bootstrap.min.css">
 
 </head>
 
 <body>
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">文件夹操作</a>
+
+    <body class="layui-layout-body">
+        <div id="node_folder" class="layui-layout layui-layout-admin">
+            <div class="layui-header">
+                <div class="layui-logo">NODE</div>
+                <ul class="layui-nav layui-layout-left" lay-filter="">
+                    <li class="layui-nav-item"><a href="/">文件操作</a></li>
+                    <li class="layui-nav-item layui-this"><a href="/table">数据操作</a></li>
+                </ul>
+            </div>
+            <div class="layui-body">
+                <form class="layui-form" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">作者:</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="author" placeholder="请输入" autocomplete="off"
+                                    class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">标题:</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title" placeholder="请输入" autocomplete="off"
+                                    class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">朝代:</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="dynasty" placeholder="请输入" autocomplete="off"
+                                    class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">分类:</label>
+                            <div class="layui-input-block">
+                                <select name="type">
+                                    <option value=""></option>
+                                    <option value="1">写事写人</option>
+                                    <option value="2">写景咏物</option>
+                                    <option value="3">言志抒情</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit lay-filter="formDemo">查询</button>
+                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <table class="layui-table" lay-even lay-skin="nob" id="formList" lay-filter="formList">
+
+                </table>
             </div>
         </div>
-    </nav>
-    <div class="content" style="padding: 0 25px">
-        <form class="form-inline" id="formList">
-            <div class="form-group">
-                <label for="author">作者</label>
-                <input type="text" class="form-control" id="author" name="author" placeholder="请输入">
-            </div>
-            <div class="form-group">
-                <label for="title">标题</label>
-                <input type="text" class="form-control" id="title" name="title" placeholder="请输入">
-            </div>
-            <div class="form-group">
-                <label for="dynasty">朝代</label>
-                <input type="text" class="form-control" id="dynasty" name="dynasty" placeholder="请输入">
-            </div>
-            <div class="form-group">
-                <label for="type">分类</label>
-                <select class="form-control" name="type" id="type">
-                    <option value="0">请选择</option>
-                    <option value="1">写事写人</option>
-                    <option value="2">写景咏物</option>
-                    <option value="3">言志抒情</option>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary" style="margin-left:20px">查询</button>
-            <button class="btn btn-primary">重置</button>
-            <button class="btn btn-success" style="margin-left:20px"
-                onclick="$('#upModal').modal('toggle');return false">新增</button>
-        </form>
-        <table class="table table-striped ">
-            <thead>
-                <tr>
-                    <th>序号</th>
-                    <th>标题</th>
-                    <th>作者</th>
-                    <th>朝代</th>
-                    <th>内容</th>
-                    <th>分类</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody id="tableList">
-                <!-- <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    <td>众鸟高飞尽，孤云独去闲。相看两不厌，只有敬亭山。</td>
-                    <td>Otto</td>
-                    <td>
-                        <button class="btn btn-default">编辑</button>
-                        <button class="btn btn-default">删除</button>
-                    </td>
-                </tr>-->
-            </tbody>
-
-        </table>
-        <h4 style="text-align: center;" id="noData">暂无相关数据</h4>
-        <nav id="pagination">
-            <ul class="pagination">
-                <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
-                <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-                <li><a href="#">2</a></li>
-
-                <li><a href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
-            </ul>
-        </nav>
-    </div>
-    <div class="modal" tabindex="-1" role="dialog" id="upModal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">新增</h4>
+        <div id="modalDemo" style="display:none">
+            <form class="layui-form" action="" style="padding: 30px 50px 0 0;">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">作者</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="author" lay-verify="author" autocomplete="off" placeholder="请输入标题"
+                            class="layui-input">
+                    </div>
                 </div>
-                <div class="modal-body" style="padding: 20px 50px;">
-                    <form id="mondalForm">
-                        <div class="form-group">
-                            <label for="author">作者</label>
-                            <input type="text" class="form-control" id="author" name="author" placeholder="请输入">
-                        </div>
-                        <div class="form-group">
-                            <label for="title">标题</label>
-                            <input type="text" class="form-control" id="title" name="title" placeholder="请输入">
-                        </div>
-                        <div class="form-group">
-                            <label for="dynasty">朝代</label>
-                            <input type="text" class="form-control" id="dynasty" name="dynasty" placeholder="请输入">
-                        </div>
-                        <div class="form-group">
-                            <label for="content">内容</label>
-                            <textarea class="form-control" rows="3" id="content" name="content"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="type">分类</label>
-                            <select class="form-control" name="type" id="type">
-                                <option>请选择</option>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">标题</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入标题"
+                            class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">朝代</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="dynasty" lay-verify="dynasty" autocomplete="off" placeholder="请输入标题"
+                            class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">分类</label>
+                    <div class="layui-input-block">
+                        <select name="type" lay-filter="type">
+                                <option value=""></option>
                                 <option value="1">写事写人</option>
                                 <option value="2">写景咏物</option>
                                 <option value="3">言志抒情</option>
-                            </select>
-                        </div>
-                    </form>
+                        </select>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="addPoetry()">确定</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">内容</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="请输入内容" name="content" class="layui-textarea"></textarea>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
-    </div>
-    <script src="/common/jquery-1.11.3.min.js"></script>
-    <script src="/common/bootstrap.min.js"></script>
-    <script src="/common/table.js"></script>
-</body>
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-sm" lay-event="add">新增</button>
+                <button class="layui-btn layui-btn-sm" lay-event="delete">删除</button>
+                <button class="layui-btn layui-btn-sm" lay-event="update">编辑</button>
+            </div>
+        </script>
+
+        <script src="/common/jquery-1.11.3.min.js"></script>
+        <script src="/layui/layui.js"></script>
+        <script src="/common/table.js"></script>
+    </body>
 
 </html>

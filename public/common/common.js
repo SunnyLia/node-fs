@@ -1,18 +1,21 @@
-var path="/",name="";
+var path = "/", name = "", layer = "";
+layui.use('layer', function () {
+    layer = layui.layer;
+});
 var copyPath = localStorage.getItem("copyPath");
 var clipPath = localStorage.getItem("clipPath");
-if(copyPath || clipPath){
+if (copyPath || clipPath) {
     $("#paste").removeClass("active")
-}else{
+} else {
     $("#paste").addClass("active")
 }
-$("body").click(function(){
+$("body").click(function () {
     $("#menu").hide();
     $("#bodyMenu").hide();
 })
 $("body").on("contextmenu", function (e) {
     $("#menu").hide()
-    $("#bodyMenu").show().css({ top: e.clientY, left: e.clientX });
+    $("#bodyMenu").show().css({ top: e.clientY-60, left: e.clientX });
     return false;
 })
 //鼠标右击
@@ -24,7 +27,7 @@ $("#foldList").on("contextmenu", "li", function (e) {
     name = $(e.currentTarget).attr("name"); //获取到文件名
     $(this).addClass("active").siblings().removeClass("active");
     $("#bodyMenu").hide();
-    $("#menu").show().css({ top: e.clientY, left: e.clientX });
+    $("#menu").show().css({ top: e.clientY-60, left: e.clientX });
     return false
 })
 //鼠标双击
@@ -37,23 +40,26 @@ $("#bodyMenu li").on("click", function (e) {
     if (tex == "新建") {
         return false;
     } else if (tex == "上传") {
-        $('#upModal').modal('toggle');
+        layer.confirm('<p>文件将被上传至当前目录</p><input type="file" name="file" id="file">', { title: '上传' }, function (index) {
+            upForAjax()
+            layer.close(index);
+        });
     } else if (tex == "粘贴") {
-        if(copyPath){
-            pasteForAjax(function(){
+        if (copyPath) {
+            pasteForAjax(function () {
                 localStorage.removeItem("copyPath");
             });
-        }else if(clipPath){
-            clipForAjax(function(){
+        } else if (clipPath) {
+            clipForAjax(function () {
                 localStorage.removeItem("clipPath");
             });
-        }else{
+        } else {
             return;
         }
     } else if (tex == "文件夹") {
-        addFoleForAjax(1,function(){});
+        addFoleForAjax(1, function () { });
     } else if (tex == "文本文档") {
-        addFoleForAjax(0,function(){});
+        addFoleForAjax(0, function () { });
     }
     $("#bodyMenu").hide();
 })
@@ -63,87 +69,89 @@ $("#menu li").on("click", function (e) {
     if (tex == "打开") {
         window.open(path)
     } else if (tex == "复制") {
-        localStorage.setItem("copyPath",path);
+        localStorage.setItem("copyPath", path);
         localStorage.removeItem("clipPath");
-        window.location.reload() 
+        window.location.reload()
     } else if (tex == "剪切") {
         localStorage.removeItem("copyPath");
-        localStorage.setItem("clipPath",path)
-        window.location.reload() 
+        localStorage.setItem("clipPath", path)
+        window.location.reload()
     } else if (tex == "删除") {
-        $('#delModal').modal('toggle')
+        layer.confirm('确定要删除此文件嘛？', { title: '删除' }, function (index) {
+            delForAjax();
+            layer.close(index);
+        });
     } else if (tex == "重命名") {
         var actInput = $("#foldList .active").find("input");
         actInput.show().focus().prev().hide();
-        actInput.blur(function(){
-            var newPath = path.replace(name,actInput.val());
+        actInput.blur(function () {
+            var newPath = path.replace(name, actInput.val());
             renameForAjax(newPath)
         });
     }
     $("#menu").hide();
 })
-function renameForAjax(newPath){
-    $.get("/rename",{oldPath:escape(path),newPath:escape(newPath)},function(data){
-        if(data.code != 1){
+function renameForAjax(newPath) {
+    $.get("/rename", { oldPath: escape(path), newPath: escape(newPath) }, function (data) {
+        if (data.code != 1) {
             alert(data.code)
         }
-        window.location.reload() 
+        window.location.reload()
     })
 }
-function delForAjax(){
-    $.get("/deldir",{path:escape(path),name:escape(name)},function(data){
-        if(data.code != 1){
+function delForAjax() {
+    $.get("/deldir", { path: escape(path), name: escape(name) }, function (data) {
+        if (data.code != 1) {
             alert(data.code)
         }
-        window.location.reload() 
+        window.location.reload()
     })
-    $('#delModal').modal('toggle')
 }
-function pasteForAjax(callback){
-    $.get("/paste",{copyPath:escape(copyPath),pasteDir:escape(decodeURI(location.pathname))},function(data){
-        if(data.code != 1){
+function pasteForAjax(callback) {
+    $.get("/paste", { copyPath: escape(copyPath), pasteDir: escape(decodeURI(location.pathname)) }, function (data) {
+        if (data.code != 1) {
             alert(data.code)
-        }else{
+        } else {
             callback()
         }
-        window.location.reload() 
+        window.location.reload()
     })
 }
-function clipForAjax(callback){
-    $.get("/clip",{clipPath:escape(clipPath),pasteDir:escape(decodeURI(location.pathname))},function(data){
-        if(data.code != 1){
+function clipForAjax(callback) {
+    $.get("/clip", { clipPath: escape(clipPath), pasteDir: escape(decodeURI(location.pathname)) }, function (data) {
+        if (data.code != 1) {
             alert(data.code)
-        }else{
+        } else {
             callback()
         }
-        window.location.reload() 
+        window.location.reload()
     })
 }
-function addFoleForAjax(code){
-    $.get("/addFold",{code:code,pasteDir:escape(decodeURI(location.pathname))},function(data){
-        if(data.code != 1){
+function addFoleForAjax(code) {
+    $.get("/addFold", { code: code, pasteDir: escape(decodeURI(location.pathname)) }, function (data) {
+        if (data.code != 1) {
             alert(data.code);
         }
-        window.location.reload() 
+        window.location.reload()
     })
 }
-function upForAjax(){
+function upForAjax() {
     var files = $("#file")[0].files;
-    var formData = new FormData(); 
-    formData.append("file", files[0]); 
-    formData.append("pasteDir", escape(decodeURI(location.pathname))); 
+    var formData = new FormData();
+    formData.append("file", files[0]);
+    formData.append("pasteDir", escape(decodeURI(location.pathname)));
 
     $.ajax({
         type: 'POST',
         url: "/upload",
-        data:formData,
+        data: formData,
         processData: false,   // jQuery不要去处理发送的数据
         contentType: false,   // jQuery不要去设置Content-Type请求头
-        success: function(data){
-            if(data.code != 1){
+        success: function (data) {
+            if (data.code != 1) {
                 alert(data.code)
             }
-            window.location.reload() 
+            window.location.reload()
         }
     });
 }

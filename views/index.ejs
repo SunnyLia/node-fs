@@ -5,113 +5,82 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>文件夹</title>
+    <title>文件操作</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
     <link rel="stylesheet" href="/common/common.css">
-    <link rel="stylesheet" href="https://res.layui.com/layui/dist/css/layui.css?t=1579809530538">
 
 </head>
 
 <body class="layui-layout-body">
     <div id="node_folder" class="layui-layout layui-layout-admin">
         <div class="layui-header">
-            <div class="layui-logo">文件操作</div>
-        </div> 
-        <span class="layui-breadcrumb">
-            <a href="/">首页</a>
-            <% for (let i = 0; i < breadcrumbs.word.length; i++) { %>
-                <% if(i == breadcrumbs.word.length-1){ %>
-                    <a><cite><%= breadcrumbs.word[i] %></cite></a>
-                <% }else{ %>
-                    <a href="<%= breadcrumbs.path[i] %>/"><%= breadcrumbs.word[i] %></a>
-                <% } %>
-            <% } %>
-        </span>
-        <ul id="foldList">
-            <% foldLists.forEach(function(item){ %>
-                <!-- <li> -->
-                    <% if (item.isFold) { %>
-                        <li href="<%= item.dir %>/" name="<%= item.foldName %>">
-                            <div style="width:50%"><i class="glyphicon glyphicon-folder-close"></i><span><%= item.foldName %></span><input class="default" type="text" value="<%= item.foldName %>"></div>
-                    <% }else{ %>
-                        <li href="<%= item.dir %>" name="<%= item.foldName %>">
-                        <% if (item.type == 'JPG' || item.type == 'PNG' || item.type == 'GIF') { %>
-                            <div style="width:50%"><i class="glyphicon glyphicon-picture"></i><span><%= item.foldName %></span><input class="default" type="text" value="<%= item.foldName %>"></div>
-                        <% }else{ %>
-                            <div style="width:50%"><i class="glyphicon glyphicon-file"></i><span><%= item.foldName %></span><input class="default" type="text" value="<%= item.foldName %>"></div>
-                        <% } %>
-                    <% } %>
-                        <div style="width:20%"><%= item.date %></div>
-                        <% if (!item.isFold) { %>
-                        <div style="width:15%"><%= item.type %></div>
-                        <div style="width:15%"><%= item.size %>KB</div>
-                        <% } %>
-                        <div style="clear:both"></div>
-                    </ll>
-                <!-- </li> -->
-            <% }) %>
-        </ul>
-        <ul id="menu">
-            <li>打开</li>
-            <li>复制</li>
-            <!-- <li class="active" id="paste">粘贴</li> -->
-            <li>剪切</li>    
-            <li>删除</li>
-            <li>重命名</li>
-        </ul>
-        <ul id="bodyMenu">
-            <li>
-                <span>新建</span>
-                <ul>
-                    <li>文件夹</li>
-                    <li>文本文档</li>
+                <div class="layui-logo">NODE</div>
+                <ul class="layui-nav layui-layout-left" lay-filter="">
+                    <li class="layui-nav-item layui-this"><a href="">文件操作</a></li>
+                    <li class="layui-nav-item"><a href="/table">数据操作</a></li>
                 </ul>
-                <i class="glyphicon glyphicon-menu-right"></i>
-            </li>
-            <li class="active" id="paste">粘贴</li>
-            <li>上传</li>
-        </ul>
-    </div>
-    <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" id="delModal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">删除文件</h4>
-                </div>
-                <div class="modal-body">
-                    <p>确定是要删除此文件嘛？</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="delForAjax()">确定</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                </div>
+        </div> 
+        <div class="layui-body">
+            <div class="layui-breadcrumb">
+                <a href="/">首页</a>
+                <% for (let i = 0; i < breadcrumbs.word.length; i++) { %>
+                    <% if(i == breadcrumbs.word.length-1){ %>
+                        <span lay-separator="">/</span>
+                        <a><cite><%= breadcrumbs.word[i] %></cite></a>
+                    <% }else{ %>
+                        <span lay-separator="">/</span>
+                        <a href="<%= breadcrumbs.path[i] %>/"><%= breadcrumbs.word[i] %></a>
+                    <% } %>
+                <% } %>
             </div>
-        </div>
-    </div>
-    <div class="modal" tabindex="-1" role="dialog" id="upModal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">上传文件</h4>
-                </div>
-                <div class="modal-body">
-                    <!-- <form action="/upload" method="POST" id="uploadForm" enctype="multipart/form-data"> -->
-                        <p>文件将被上传至当前目录</p>
-                        <input type="file" name="file" id="file">
-                    <!-- </form> -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="upForAjax()">确定</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                </div>
-            </div>
+            <ul id="foldList">
+                <% foldLists.forEach(function(item){ %>
+                    <!-- <li> -->
+                        <% if (item.isFold) { %>
+                            <li href="<%= item.dir %>/" name="<%= item.foldName %>">
+                                <div style="width:50%"><i class="layui-icon layui-icon-export"></i><span><%= item.foldName %></span><input class="default" type="text" value="<%= item.foldName %>"></div>
+                        <% }else{ %>
+                            <li href="<%= item.dir %>" name="<%= item.foldName %>">
+                            <% if (item.type == 'JPG' || item.type == 'PNG' || item.type == 'GIF') { %>
+                                <div style="width:50%"><i class="layui-icon layui-icon-picture"></i><span><%= item.foldName %></span><input class="default" type="text" value="<%= item.foldName %>"></div>
+                            <% }else{ %>
+                                <div style="width:50%"><i class="layui-icon layui-icon-file"></i><span><%= item.foldName %></span><input class="default" type="text" value="<%= item.foldName %>"></div>
+                            <% } %>
+                        <% } %>
+                            <div style="width:20%"><%= item.date %></div>
+                            <% if (!item.isFold) { %>
+                            <div style="width:15%"><%= item.type %></div>
+                            <div style="width:15%"><%= item.size %>KB</div>
+                            <% } %>
+                            <div style="clear:both"></div>
+                        </ll>
+                    <!-- </li> -->
+                <% }) %>
+            </ul>
+            <ul id="menu">
+                <li>打开</li>
+                <li>复制</li>
+                <!-- <li class="active" id="paste">粘贴</li> -->
+                <li>剪切</li>    
+                <li>删除</li>
+                <li>重命名</li>
+            </ul>
+            <ul id="bodyMenu">
+                <li>
+                    <span>新建</span>
+                    <ul>
+                        <li>文件夹</li>
+                        <li>文本文档</li>
+                    </ul>
+                    <i class="layui-icon layui-icon-right"></i>
+                </li>
+                <li class="active" id="paste">粘贴</li>
+                <li>上传</li>
+            </ul>
         </div>
     </div>
     <script src="/common/jquery-1.11.3.min.js"></script>
-    <script src="https://res.layui.com/layui/dist/layui.js?t=1579809530538"></script>
+    <script src="/layui/layui.js"></script>
     <script src="/common/common.js"></script>
 
 </body>
