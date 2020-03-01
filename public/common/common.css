@@ -19,7 +19,6 @@ html,body{
     left: 0!important;
     bottom: 0!important;
     padding: 15px 20px;
-    font-size: 18px;
     color: #777!important;
 }
 .layui-breadcrumb{
@@ -62,6 +61,7 @@ html,body{
     width: 1000px;
     height: 25px;
     line-height: 25px;
+    font-size: 18px;
 }
 #foldList > li:hover, #foldList > li.active{
     background: #d9eaf7
@@ -98,7 +98,7 @@ html,body{
 }
 #bodyMenu > li > ul{
     position: absolute;
-    left: 210px;
+    left: 205px;
     top: 0;
     width: 150px;
     background: #eaeaea;
@@ -116,8 +116,9 @@ html,body{
 }
 
 /* table页面 */
-.content .form-inline{
-    margin-bottom: 20px;
-    background: #f8f8f8;
-    padding: 20px;
+.layui-input-block{
+    margin-left: 80px;
+}
+.layui-form-label{
+    width: 50px;
 }

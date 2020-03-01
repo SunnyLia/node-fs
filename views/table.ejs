@@ -23,7 +23,7 @@
                 </ul>
             </div>
             <div class="layui-body">
-                <form class="layui-form" action="">
+                <form class="layui-form" id="formList">
                     <div class="layui-form-item">
                         <div class="layui-inline">
                             <label class="layui-form-label">作者:</label>
@@ -59,37 +59,37 @@
                         </div>
                         <div class="layui-inline">
                             <div class="layui-input-block">
-                                <button class="layui-btn" lay-submit lay-filter="formDemo">查询</button>
+                                <button class="layui-btn" lay-submit lay-filter="formList">查询</button>
                                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                             </div>
                         </div>
                     </div>
                 </form>
-                <table class="layui-table" lay-even lay-skin="nob" id="formList" lay-filter="formList">
+                <table class="layui-table" lay-even lay-skin="nob" id="tableList" lay-filter="tableList">
 
                 </table>
             </div>
         </div>
         <div id="modalDemo" style="display:none">
-            <form class="layui-form" action="" style="padding: 30px 50px 0 0;">
+            <form class="layui-form" id="modalForm" action="" style="padding:30px 40px 5px 10px;">
                 <div class="layui-form-item">
                     <label class="layui-form-label">作者</label>
                     <div class="layui-input-block">
-                        <input type="text" name="author" lay-verify="author" autocomplete="off" placeholder="请输入标题"
-                            class="layui-input">
+                        <input type="text" name="author" lay-verify="required" autocomplete="off" placeholder="请输入标题"
+                            class="layui-input" value="李白">
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">标题</label>
                     <div class="layui-input-block">
-                        <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入标题"
+                        <input type="text" name="title" lay-verify="required" autocomplete="off" placeholder="请输入标题"
                             class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">朝代</label>
                     <div class="layui-input-block">
-                        <input type="text" name="dynasty" lay-verify="dynasty" autocomplete="off" placeholder="请输入标题"
+                        <input type="text" name="dynasty" autocomplete="off" placeholder="请输入标题"
                             class="layui-input">
                     </div>
                 </div>
@@ -97,7 +97,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">分类</label>
                     <div class="layui-input-block">
-                        <select name="type" lay-filter="type">
+                        <select name="type">
                                 <option value=""></option>
                                 <option value="1">写事写人</option>
                                 <option value="2">写景咏物</option>
@@ -109,6 +109,12 @@
                     <label class="layui-form-label">内容</label>
                     <div class="layui-input-block">
                         <textarea placeholder="请输入内容" name="content" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="modalForm">确定</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">取消</button>
                     </div>
                 </div>
             </form>
