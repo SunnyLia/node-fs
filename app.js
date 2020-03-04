@@ -8,6 +8,8 @@ app.set("view engine", "ejs");
 app.get('/table',table.poetry);
 app.get('/query',table.query);
 app.get('/addPoetry',table.addPoetry);
+app.get('/editPoetry',table.editPoetry);
+app.get('/delPoetry',table.delPoetry);
 
 /* 文件操作 */
 app.get('/deldir',com.deldir);
