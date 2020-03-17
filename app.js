@@ -2,8 +2,13 @@ const express = require("express");
 const app = express();
 const com = require("./routers");
 const table = require("./routers/table");
+const chatOnline = require("./routers/chatOnline");
 app.use(express.static('./public'))
 app.set("view engine", "ejs");
+/* 在线聊天 */
+app.get('/chatOnline',chatOnline.getChat);
+app.get('/chatRoom',chatOnline.chatRoom);
+
 /* table列表 */
 app.get('/table',table.poetry);
 app.get('/query',table.query);

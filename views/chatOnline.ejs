@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>在线聊天</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <link rel="stylesheet" href="/common/common.css">
+
+</head>
+
+<body class="layui-layout-body">
+    <div id="chatOnline" class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo">NODE</div>
+            <ul class="layui-nav layui-layout-left" lay-filter="">
+                <li class="layui-nav-item"><a href="/">文件操作</a></li>
+                <li class="layui-nav-item"><a href="/table">数据操作</a></li>
+                <li class="layui-nav-item layui-this"><a href="javascript:;">在线聊天</a></li>
+            </ul>
+        </div>
+        <div class="layui-body">
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                <legend>聊天列表</legend>
+            </fieldset>
+
+            <div style="padding: 20px; background-color: #F2F2F2;">
+                <div class="layui-row layui-col-space15" id="chatLists">
+                    <div class="layui-col-md6 chatItem">
+                        <div class="layui-card">
+                            <div class="layui-row">
+                                <div class="layui-col-xs9">
+                                    <img src="/images/user.png" class="chatUses" alt="">
+                                    <p class="chatTitle">闲聊群</p>
+                                    <p>温馨，和谐，礼貌，真诚，不欢迎广告！</p>
+                                </div>
+                                <div class="layui-col-xs3">
+                                    <p>创建人:张三</p>
+                                    <p>2020/03/17 11:45</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md6 chatItem">
+                        <div class="layui-card">
+                            <div class="layui-row">
+                                <div class="layui-col-xs9">
+                                    <img src="/images/user.png" class="chatUses" alt="">
+                                    <p class="chatTitle">项目沟通群</p>
+                                    <p>进群请先修改群昵称，格式：部门-姓名</p>
+                                </div>
+                                <div class="layui-col-xs3">
+                                    <p>创建人:李四</p>
+                                    <p>2020/03/17 11:45</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/common/jquery-1.11.3.min.js"></script>
+    <script src="/layui/layui.js"></script>
+    <script src="/common/chatOnline.js"></script>
+
+</body>
+
+</html>
