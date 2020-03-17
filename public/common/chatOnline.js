@@ -14,11 +14,7 @@ layui.use(['form', 'layer'], function () {
                 type: 2,
                 title:"我的中国心",
                 area: ['375px', '667px'],
-                content: ['/chatRoom'],
-                success: function () { //此处用于演示
-                    console.log(11111111);
-                    
-                }
+                content: ['/chatRoom']
             });
         }
     })
