@@ -1,14 +1,17 @@
 const express = require("express");
 const app = express();
+
 const com = require("./routers");
 const table = require("./routers/table");
 const chatOnline = require("./routers/chatOnline");
+const apiSocket = require("./routers/apiSocket");
 
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
 app.use(express.static('./public'))
 app.set("view engine", "ejs");
+
 /* 在线聊天 */
 app.get('/chatOnline', chatOnline.getChat);
 app.get('/chatRoom', chatOnline.chatRoom);
@@ -38,8 +41,5 @@ server.listen(8081, function () {
 
 io.on('connection', function (socket) {
     console.log('a user connected');
-    socket.emit('news', { hello: 'world' });
-    socket.on('my other event', function (data) {
-        console.log(data);
-    });
+    apiSocket.socket(socket)
 });

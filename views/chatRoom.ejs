@@ -36,12 +36,11 @@
     <script src="/layui/layui.js"></script>
     <script type="text/javascript" src="/common/socket.io.min.js"></script>
     <script>
-        // var socket = io.connect('http://localhost');
         var socket = io();
-        socket.on('news', function (data) {
-            console.log(data);
-            socket.emit('my other event', { my: 'data' });
+        socket.on('connect', function () {
+            socket.emit('join', { my: 'data' });
         });
+
     </script>
 </body>
 
