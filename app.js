@@ -14,7 +14,7 @@ app.set("view engine", "ejs");
 
 /* 在线聊天 */
 app.get('/chatOnline', chatOnline.getChat);
-app.get('/chatRoom', chatOnline.chatRoom);
+app.get('/chatRoom.htm', chatOnline.chatRoom);
 
 /* table列表 */
 app.get('/table', table.poetry);
@@ -40,6 +40,6 @@ server.listen(8081, function () {
 });
 
 io.on('connection', function (socket) {
-    console.log('a user connected');
+    // console.log('a user connected');
     apiSocket.socket(socket)
 });

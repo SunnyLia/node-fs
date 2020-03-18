@@ -13,7 +13,12 @@
 
 <body class="layui-layout-body">
     <div id="chatRoom">
-        <div id="chatList" style="margin-bottom: 50px;">
+
+        <div id="chatTop">
+            <span>闲聊群 (12)</span>
+            <i class="layui-icon layui-icon-close" onclick="roomClose()"></i>
+        </div>
+        <div id="chatList" style="margin: 50px 0;">
             <div class="chatItem" style="padding: 10px;">
                 <div class="author">张三</div>
                 <div class="time">
@@ -38,8 +43,24 @@
     <script>
         var socket = io();
         socket.on('connect', function () {
-            socket.emit('join', { my: 'data' });
+            socket.emit('join', { id: getQuery("roomId") });
+            
         });
+        socket.on('chatLists', function (data) {
+                console.log(data);
+            });
+        function roomClose() {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+        }
+        function getQuery(name) {
+            var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) {
+                return unescape(r[2]);
+            }
+            return null;
+        }
 
     </script>
 </body>
