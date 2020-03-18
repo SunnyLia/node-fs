@@ -45,6 +45,7 @@
             var user = window.sessionStorage.getItem("user");
             var socket = io();
             socket.on('connect', function () {
+                console.log("socket服务连接");
                 socket.emit('join', { id: "001" });
             });
             socket.on('chatLists', function (data) {
@@ -53,6 +54,10 @@
                 } else {
                     layer.msg(data.msg)
                 }
+            });
+            socket.on('disconnect', () => {
+                console.log("socket服务已断开，等待重连...");
+                socket.open();
             });
             $(".layui-icon-close").on("click", function () {
                 var index = parent.layer.getFrameIndex(window.name);
