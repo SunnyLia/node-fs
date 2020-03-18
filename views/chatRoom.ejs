@@ -16,7 +16,7 @@
 
         <div id="chatTop">
             <span>闲聊群 (12)</span>
-            <i class="layui-icon layui-icon-close" onclick="roomClose()"></i>
+            <i class="layui-icon layui-icon-close"></i>
         </div>
         <div id="chatList" style="margin: 50px 0;">
             <div class="chatItem" style="padding: 10px;">
@@ -33,35 +33,65 @@
             </div>
         </div>
         <div id="chatBotton">
-            <input type="text" name="chatWord" class="layui-input">
-            <button type="button" class="layui-btn">发送</button>
+            <input type="text" id="chatWord" class="layui-input">
+            <button type="button" class="layui-btn" id="send-btn">发送</button>
         </div>
     </div>
     <script src="/common/jquery-1.11.3.min.js"></script>
     <script src="/layui/layui.js"></script>
     <script type="text/javascript" src="/common/socket.io.min.js"></script>
     <script>
-        var socket = io();
-        socket.on('connect', function () {
-            socket.emit('join', { id: getQuery("roomId") });
-            
-        });
-        socket.on('chatLists', function (data) {
-                console.log(data);
+        layui.use(['layer'], function () {
+            var user = window.sessionStorage.getItem("user");
+            var socket = io();
+            socket.on('connect', function () {
+                socket.emit('join', { id: "001" });
             });
-        function roomClose() {
-            var index = parent.layer.getFrameIndex(window.name);
-            parent.layer.close(index);
-        }
-        function getQuery(name) {
-            var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
-            var r = window.location.search.substr(1).match(reg);
-            if (r != null) {
-                return unescape(r[2]);
+            socket.on('chatLists', function (data) {
+                if (data.code == 0) {
+                    chatListRend(data.data)
+                } else {
+                    layer.msg(data.msg)
+                }
+            });
+            $(".layui-icon-close").on("click", function () {
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+            })
+            $("#send-btn").on("click", function () {
+                var msg = $("#chatWord").val();
+                if (msg.trim() != "") {
+                    var sendData = {
+                        msg: msg,
+                        userName: user,
+                        roomId: getQuery("roomId"),
+                        userId: ($(".self").length > 0 ? $(".self").eq(0).attr("data-id") : null)
+                    }
+                    socket.emit('sendMsg', sendData);
+                    $("#chatWord").val("")
+                }
+            })
+            function getQuery(name) {
+                var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) {
+                    return unescape(r[2]);
+                }
+                return null;
             }
-            return null;
-        }
-
+            function chatListRend(data) {
+                var str = "";
+                for (var i = 0; i < data.length; i++) {
+                    str +=
+                        '<div class="chatItem' + (data[i].userName == user ? " self" : "") + '" style="padding: 10px;" data-id="' + data[i].userId + '">' +
+                        '<div class="author">' + (data[i].userName == user ? "我" : data[i].userName.slice(0, 2)) + '</div>' +
+                        '<div class="time"><span style="font-weight:bold">' + (data[i].userName == user ? "" : data[i].userName) + ' </span>' + data[i].userChatTime + '</div>' +
+                        '<div class="massage">' + data[i].userChat + '</div>' +
+                        '</div>'
+                }
+                $("#chatList").append(str);
+            }
+        })
     </script>
 </body>
 
