@@ -43,7 +43,7 @@
             var socket = io();
             socket.on('connect', function () {
                 console.log("socket服务已连接");
-                socket.emit('join', { id: getQuery("roomId") });
+                socket.emit('join', { id: getQuery("roomId"), user: user });
             });
             socket.on('chatLists', function (data) {
                 if (data.code == 0) {
