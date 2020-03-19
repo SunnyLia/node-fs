@@ -1,13 +1,13 @@
-const express = require("express");
-const app = express();
+var express = require("express");
+var app = express();
 
-const com = require("./routers");
-const table = require("./routers/table");
-const chatOnline = require("./routers/chatOnline");
-const apiSocket = require("./routers/apiSocket");
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
+var com = require("./routers");
+var table = require("./routers/table");
+var chatOnline = require("./routers/chatOnline");
+var apiSocket = require("./routers/apiSocket");
 
 app.use(express.static('./public'))
 app.set("view engine", "ejs");
@@ -35,11 +35,14 @@ app.all('*', com.readdir);
 // app.listen("8081", () => {
 //     console.log(`server run in 8081`)
 // })
-server.listen(8081, function () {
+http.listen(8081, function () {
     console.log('web socket listening on *:8081');
 });
 
 io.on('connection', function (socket) {
-    // console.log('a user connected');
-    apiSocket.socket(socket)
+    console.log('a user connected');
+    socket.on('disconnect', function () {
+        console.log('a user disconnected');
+    });
+    apiSocket.socket1(socket,io)
 });
