@@ -233,6 +233,10 @@ html,body{
     right: -6px;
 }
 #inORout{
+    text-align:center;
+    padding:5px
+}
+#inORout span{
     color: #666;
     font-size: 12px;
     display: inline-block;
