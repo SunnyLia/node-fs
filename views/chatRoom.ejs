@@ -38,6 +38,7 @@
     <script src="/layui/layui.js"></script>
     <script type="text/javascript" src="/common/socket.io.min.js"></script>
     <script>
+        var resData = '<%- JSON.stringify(chatLists) %>';
         layui.use(['layer'], function () {
             var user = window.sessionStorage.getItem("user");
             var socket = io();
@@ -56,6 +57,7 @@
                 console.log("socket服务已断开");
                 // socket.open();
             });
+            chatListRend(JSON.parse(resData))
             $("#chatWord").keypress(function (e) {
                 if (e.which == 13) {
                     $("#send-btn").click();
