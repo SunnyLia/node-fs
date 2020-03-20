@@ -19,15 +19,7 @@
             <i class="layui-icon layui-icon-close"></i>
         </div>
         <div id="chatList" style="margin: 50px 0;">
-            <div class="chatItem" style="padding: 10px;">
-                <div class="author">机器</div>
-                <div class="time">
-                    <span style="font-weight:bold">机器人 </span>
-                </div>
-                <div class="massage">
-                    欢迎我们的新同学，热烈欢迎~
-                </div>
-            </div>
+
         </div>
         <div id="chatBotton">
             <input type="text" id="chatWord" class="layui-input">
@@ -91,10 +83,12 @@
             function chatListRend(data) {
                 var str = "";
                 for (var i = 0; i < data.length; i++) {
+                    var name = data[i].userName;
                     str +=
-                        '<div class="chatItem' + (data[i].userName == user ? " self" : "") + '" style="padding: 10px;" data-id="' + data[i].userId + '">' +
-                        '<div class="author">' + (data[i].userName == user ? "我" : data[i].userName.slice(0, 2)) + '</div>' +
-                        '<div class="time"><span style="font-weight:bold">' + (data[i].userName == user ? "" : data[i].userName) + ' </span>' + data[i].userChatTime + '</div>' +
+                        '<div class="chatItem' + (name == user ? " self" : "") + '" style="padding: 10px;" data-id="' + data[i].userId + '">' +
+                        '<div class="author">' + (name == user ? "我" : name.slice(0, 2)) + '</div>' +
+                        '<div class="time"><span style="font-weight:bold">' + (name == user ? "" : name) + ' </span>' +
+                        '<span>' + (data[i].userChatTime ? data[i].userChatTime : "") + '</span></div>' +
                         '<div class="massage">' + data[i].userChat + '</div>' +
                         '</div>'
                 }

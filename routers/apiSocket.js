@@ -6,7 +6,9 @@ var url = "mongodb://localhost:27017/";
 exports.socket1 = function (socket, io) {
     socket.on('join', function (info) {
         socket.join(info.id)
-        io.to(info.id).emit('chatLists', { code: 1, msg: { "name": "欢迎新同学" + info.user + "进入群聊" } });
+        io.to(info.id).emit('chatLists', {
+            code: 0, data: [{ "userName": "机器人", "userChat": "欢迎新童鞋" + info.user + "加入群聊~" }]
+        });
     })
     socket.on('sendMsg', function (info) {
         var docs = [{
