@@ -16,7 +16,7 @@
 
         <div id="chatTop">
             <span id="roomName">闲聊群</span>
-            <span id="userCount">0</span>
+            (<span id="userCount">0</span>)
             <i class="layui-icon layui-icon-close"></i>
         </div>
         <div id="chatList" style="margin: 50px 0;">
@@ -37,7 +37,9 @@
             var socket = io();
             socket.on('connect', function () {
                 console.log("socket connect");
-                socket.emit('join', { id: getQuery("roomId"), user: user });
+                socket.emit('join', { id: getQuery("roomId"), user: user }, function (num) {
+                    $("#userCount").text(num)
+                });
             });
             socket.on('disconnect', () => {
                 console.log("socket disconnect");
@@ -51,11 +53,9 @@
                 }
             });
             socket.on('inORout', function (data) {
-                var str = '<div id="inORout"><span>' + data + '</span></div>';
+                var str = '<div id="inORout"><span>' + data.msg + '</span></div>';
                 $("#chatList").append(str);
-                console.log($("#userCount").text());
-                
-                // $("#userCount").text(" (" + data.count + ")")
+                $("#userCount").text(data.count)
             });
             chatListRend(JSON.parse(resData))
             $("#chatWord").keypress(function (e) {

@@ -5,18 +5,20 @@ var url = "mongodb://localhost:27017/";
 var info1 = "";
 exports.socket1 = function (io) {
     io.on('connection', function (socket) {
-        socket.on('join', function (info) {
+        socket.on('join', function (info, fn) {
             info1 = info;
             socket.join(info.id); //添加到房间
             var count = io.eio.clientsCount;  //当前链接数
-
-            socket.broadcast.to(info.id).emit('inORout', info.user + "进入群聊");//广播给房间内其他人
+            fn(count);//客户端回调
+            
+            socket.broadcast.to(info.id).emit('inORout', { msg: info.user + "进入群聊", count: count });//广播给房间内其他人
             io.to(info.id).emit('chatLists', {
                 code: 0, data: [{ "userName": "机器喵", "userChat": "欢迎新童鞋" + info.user + "加入群聊~" }]
             });//广播给房间所有人
         })
-        socket.on('inORout', function (data) {
-            socket.broadcast.to(info1.id).emit('inORout', data + "退出群聊");
+        socket.on('inORout', function (data) { //用户退出监测
+            var count = io.eio.clientsCount - 1;  //当前链接数
+            socket.broadcast.to(info1.id).emit('inORout', { msg: data + "退出群聊", count: count });
         });
         socket.on('sendMsg', function (info) {
             var docs = [{
