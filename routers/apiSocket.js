@@ -2,21 +2,21 @@ var moment = require("moment");
 var mongodb = require("mongodb");
 var MongoClient = mongodb.MongoClient;
 var url = "mongodb://localhost:27017/";
+var info1 = "";
 exports.socket1 = function (io) {
-    var info1 = "";
     io.on('connection', function (socket) {
-        socket.on('disconnect', function () {
-            io.to(info1.id).emit('onORout', info1.user + "退出群聊");
-        });
         socket.on('join', function (info) {
             info1 = info;
-            socket.join(info.id);
-            
-            io.to(info.id).emit('onORout', info.user + "进入群聊");
+            socket.join(info.id); //添加到房间
+
+            socket.broadcast.to(info.id).emit('onORout', info.user + "进入群聊");//广播给房间内其他人
             io.to(info.id).emit('chatLists', {
-                code: 0, data: [{ "userName": "机器人", "userChat": "欢迎新童鞋" + info.user + "加入群聊~" }]
-            });
+                code: 0, data: [{ "userName": "机器喵", "userChat": "欢迎新童鞋" + info.user + "加入群聊~" }]
+            });//广播给房间所有人
         })
+        socket.on('onORout', function (data) {
+            socket.broadcast.to(info1.id).emit('onORout', data + "退出群聊");
+        });
         socket.on('sendMsg', function (info) {
             var docs = [{
                 userName: info.userName,

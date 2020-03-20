@@ -50,7 +50,7 @@
                 }
             });
             socket.on('onORout', function (data) {
-                var str = '<div style="text-align:center"><span id="inORout">' + data + '</span></div>';
+                var str = '<div style="text-align:center;padding:5px"><span id="inORout">' + data + '</span></div>';
                 $("#chatList").append(str);
             });
             chatListRend(JSON.parse(resData))
@@ -60,6 +60,7 @@
                 }
             });
             $(".layui-icon-close").on("click", function () {
+                socket.emit('onORout', user);
                 var index = parent.layer.getFrameIndex(window.name);
                 parent.layer.close(index);
             })
