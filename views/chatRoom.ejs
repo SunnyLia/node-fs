@@ -57,6 +57,7 @@
                 $("#chatList").append(str);
                 $("#userCount").text(data.count)
             });
+            $("#roomName").text(getQuery("roomName"))
             chatListRend(JSON.parse(resData))
             $("#chatWord").keypress(function (e) {
                 if (e.which == 13) {

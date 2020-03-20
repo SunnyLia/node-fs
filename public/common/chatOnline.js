@@ -10,13 +10,14 @@ layui.use(['form', 'layer'], function () {
                 layer.close(index)
             });
         } else {
-            var roomId = $(e.currentTarget).attr("data-id");            
+            var roomId = $(e.currentTarget).attr("data-id");
+            var title = $(e.currentTarget).find(".chatTitle").text();
             layer.open({
                 type: 2,
                 title: false,
                 closeBtn: 0,
                 area: ['375px', '667px'],
-                content: ['/chatRoom.htm?roomId='+roomId]
+                content: ['/chatRoom.htm?roomId=' + roomId + "&roomName=" + escape(title)]
             });
         }
     })
