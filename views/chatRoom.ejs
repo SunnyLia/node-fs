@@ -35,8 +35,12 @@
             var user = window.sessionStorage.getItem("user");
             var socket = io();
             socket.on('connect', function () {
-                console.log("socket服务已连接");
+                console.log("socket connect");
                 socket.emit('join', { id: getQuery("roomId"), user: user });
+            });
+            socket.on('disconnect', () => {
+                console.log("socket disconnect");
+                // socket.open();
             });
             socket.on('chatLists', function (data) {
                 if (data.code == 0) {
@@ -45,9 +49,9 @@
                     layer.msg(data.msg.name)
                 }
             });
-            socket.on('disconnect', () => {
-                console.log("socket服务已断开");
-                // socket.open();
+            socket.on('onORout', function (data) {
+                var str = '<div style="text-align:center"><span id="inORout">' + data + '</span></div>';
+                $("#chatList").append(str);
             });
             chatListRend(JSON.parse(resData))
             $("#chatWord").keypress(function (e) {

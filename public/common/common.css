@@ -232,3 +232,11 @@ html,body{
     left:auto;
     right: -6px;
 }
+#inORout{
+    color: #666;
+    font-size: 12px;
+    display: inline-block;
+    padding: 2px 15px;
+    border-radius: 5px;
+    background: #c1c1c1;
+}

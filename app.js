@@ -31,14 +31,9 @@ app.get('/clip', com.clip);
 app.get('/addFold', com.addFold);
 app.post('/upload', com.upload);
 app.all('*', com.readdir);
-  
-io.on('connection', function (socket) {
-    console.log('a user connected');
-    socket.on('disconnect', function () {
-        console.log('a user disconnected');
-    });
-    apiSocket.socket1(socket,io)
-});
+
+/* socket */
+apiSocket.socket1(io)
 
 // app.listen("8081", () => {
 //     console.log(`server run in 8081`)
