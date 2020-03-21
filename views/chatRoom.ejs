@@ -15,8 +15,8 @@
     <div id="chatRoom">
 
         <div id="chatTop">
-            <span id="roomName">闲聊群</span>
-            (<span id="userCount">0</span>)
+            <span id="roomName"></span>
+            <span id="userCount"></span>
             <i class="layui-icon layui-icon-close"></i>
         </div>
         <div id="chatList" style="margin: 50px 0;">
@@ -38,7 +38,7 @@
             socket.on('connect', function () {
                 console.log("socket connect");
                 socket.emit('join', { id: getQuery("roomId"), user: user }, function (num) {
-                    $("#userCount").text(num)
+                    $("#userCount").text("("+num+")")
                 });
             });
             socket.on('disconnect', () => {
@@ -55,7 +55,7 @@
             socket.on('inORout', function (data) {
                 var str = '<div id="inORout"><span>' + data.msg + '</span></div>';
                 $("#chatList").append(str);
-                $("#userCount").text(data.count)
+                $("#userCount").text("("+data.count+")")
             });
   
             $("#roomName").text(getQuery("roomName"))
@@ -66,7 +66,7 @@
                 }
             });
             $(".layui-icon-close").on("click", function () {
-                socket.emit('inORout', user);
+                // socket.emit('inORout', user);
                 var index = parent.layer.getFrameIndex(window.name);
                 parent.layer.close(index);
             })

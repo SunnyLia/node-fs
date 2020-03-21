@@ -6,7 +6,7 @@ exports.socket1 = function (io) {
     io.on('connection', function (socket) {
         var info1 = {};
         socket.on('join', function (info, fn) {
-            info1["roomId"] = info.id;
+            info1 = info;
             socket.join(info.id); //添加到房间
 
             if (socket.adapter.rooms[info.id]) {
@@ -20,9 +20,13 @@ exports.socket1 = function (io) {
                 code: 0, data: [{ "userName": "机器喵", "userChat": "欢迎" + info.user + "童鞋加入群聊~" }]
             });//广播给房间所有人
         })
-        socket.on('inORout', function (data) { //用户退出监测
-            socket.broadcast.to(info1.roomId).emit('inORout', { msg: data + "退出群聊", count: info1.count - 1 });
-        });
+
+        socket.on('disconnect', async function () {
+            if (socket.adapter.rooms[info1.id]) {
+                info1["count"] = socket.adapter.rooms[info1.id].length;
+            }
+            socket.broadcast.to(info1.id).emit('inORout', { msg: info1.user + "退出群聊", count: info1.count });
+        })
         socket.on('sendMsg', function (info) {
             var docs = [{
                 userName: info.userName,
