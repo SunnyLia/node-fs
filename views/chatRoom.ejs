@@ -57,10 +57,7 @@
                 $("#chatList").append(str);
                 $("#userCount").text(data.count)
             });
-            /*页面刷新或关闭时调用*/
-            window.onbeforeunload = function (event) {
-                socket.emit('inORout', user);
-            };
+  
             $("#roomName").text(getQuery("roomName"))
             chatListRend(JSON.parse(resData))
             $("#chatWord").keypress(function (e) {
