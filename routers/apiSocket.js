@@ -2,11 +2,14 @@ var moment = require("moment");
 var mongodb = require("mongodb");
 var MongoClient = mongodb.MongoClient;
 var url = "mongodb://localhost:27017/";
+var userList = {};
 exports.socket1 = function (io) {
     io.on('connection', function (socket) {
         var info1 = {};
         socket.on('join', function (info, fn) {
             info1 = info;
+            userList[info.user] = socket.id; //把用户socketid存到以用户为属性的list对象里
+            
             if (info.id.indexOf("single") == -1) {
                 socket.join(info.id); //添加到房间
 
@@ -34,7 +37,7 @@ exports.socket1 = function (io) {
         socket.on('sendMsg', function (info) {
             var docs = [{
                 userName: info.userName,
-                userId: info.userId || (new Date()).getTime() + "",
+                // userId: info.userId || (new Date()).getTime() + "",
                 userChat: info.msg,
                 userChatTime: dateFormat(new Date()),
                 roomId: info.roomId
@@ -56,15 +59,15 @@ exports.socket1 = function (io) {
                     })
                 });
             } else {
-                io.to(socket.id).emit('chatLists', { code: 0, data: docs });
-                var msg = "呜呜呜，我只会加减乘除，试试问我1+2-3*4/5吧"
-                try {
-                    msg = eval(docs[0].userChat);
-                } catch (err) { }
-                io.to(socket.id).emit('chatLists', {
-                    code: 0, data:
-                        [{ "userName": "机器喵", "userChat": msg }]
-                });
+                io.to(userList[info.userName]).emit('chatLists', { code: 0, data: docs });
+                // var msg = "呜呜呜，我只会加减乘除，试试问我1+2-3*4/5吧"
+                // try {
+                //     msg = eval(docs[0].userChat);
+                // } catch (err) { }
+                // io.to(socket.id).emit('chatLists', {
+                //     code: 0, data:
+                //         [{ "userName": "机器喵", "userChat": msg }]
+                // });
             }
         })
     });

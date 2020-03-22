@@ -38,7 +38,7 @@
             socket.on('connect', function () {
                 console.log("socket connect");
                 socket.emit('join', { id: getQuery("roomId"), user: user }, function (num) {
-                    $("#userCount").text("("+num+")")
+                    $("#userCount").text("(" + num + ")")
                 });
             });
             socket.on('disconnect', () => {
@@ -55,9 +55,9 @@
             socket.on('inORout', function (data) {
                 var str = '<div id="inORout"><span>' + data.msg + '</span></div>';
                 $("#chatList").append(str);
-                $("#userCount").text("("+data.count+")")
+                $("#userCount").text("(" + data.count + ")")
             });
-  
+
             $("#roomName").text(getQuery("roomName"))
             chatListRend(JSON.parse(resData))
             $("#chatWord").keypress(function (e) {
@@ -76,8 +76,9 @@
                     var sendData = {
                         msg: msg,
                         userName: user,
+                        toWho:getQuery("roomName"),
                         roomId: getQuery("roomId"),
-                        userId: ($(".self").length > 0 ? $(".self").eq(0).attr("data-id") : null)
+                        // userId: ($(".self").length > 0 ? $(".self").eq(0).attr("data-id") : null)
                     }
                     socket.emit('sendMsg', sendData);
                     $("#chatWord").val("")
@@ -96,15 +97,30 @@
                 for (var i = 0; i < data.length; i++) {
                     var name = data[i].userName;
                     str +=
-                        '<div class="chatItem' + (name == user ? " self" : "") + '" style="padding: 10px;" data-id="' + data[i].userId + '">' +
+                        '<div class="chatItem' + (name == user ? " self" : "") + '" style="padding: 10px;" data-id="single003">' +
                         '<div class="author">' + (name == user ? "我" : name.slice(0, 2)) + '</div>' +
-                        '<div class="time"><span style="font-weight:bold">' + (name == user ? "" : name) + ' </span>' +
+                        '<div class="time"><span style="font-weight:bold" class="name">' + (name == user ? "" : name) + ' </span>' +
                         '<span>' + (data[i].userChatTime ? data[i].userChatTime : "") + '</span></div>' +
                         '<div class="massage">' + data[i].userChat + '</div>' +
                         '</div>'
                 }
                 $("#chatList").append(str);
             }
+            $("#chatList").on("click", ".author", function (e) {
+                if ($(e.currentTarget).parent().hasClass("self")) {
+                    return false;
+                } else {
+                    var roomId = $(e.currentTarget).parent().attr("data-id");
+                    var title = $(e.currentTarget).next().find(".name").text();
+                    layer.open({
+                        type: 2,
+                        title: false,
+                        closeBtn: 0,
+                        area: ['375px', '667px'],
+                        content: ['/chatRoom.htm?roomId=' + roomId + "&roomName=" + escape(title)]
+                    });
+                }
+            })
         })
     </script>
 </body>
