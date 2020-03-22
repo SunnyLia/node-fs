@@ -8,8 +8,8 @@ exports.socket1 = function (io) {
         var info1 = {};
         socket.on('join', function (info, fn) {
             info1 = info;
-            userList[info.user] = socket.id; //把用户socketid存到以用户为属性的list对象里
-            
+            // userList[info.user] = socket.id; //把用户socketid存到以用户为属性的list对象里
+
             if (info.id.indexOf("single") == -1) {
                 socket.join(info.id); //添加到房间
 
@@ -25,9 +25,11 @@ exports.socket1 = function (io) {
                 });//广播给房间所有人
             }
         })
-
+        socket.on('login', function (info) {
+            userList[info.user] = socket.id; //把用户socketid存到以用户为属性的list对象里
+        })
         socket.on('disconnect', async function () {
-            if (info1.id.indexOf("single") == -1) {
+            if (info1.id && info1.id.indexOf("single") == -1) {
                 if (socket.adapter.rooms[info1.id]) {
                     info1["count"] = socket.adapter.rooms[info1.id].length;
                 }
@@ -59,7 +61,13 @@ exports.socket1 = function (io) {
                     })
                 });
             } else {
-                io.to(userList[info.userName]).emit('chatLists', { code: 0, data: docs });
+                console.log(userList);
+                console.log(socket.id);
+                
+                // io.to(userList[info.toWho]).emit('openNewPage', { roomId: info.roomId, roomName: info.userName });
+                // io.to(userList[info.toWho]).emit('chatLists', { code: 0, data: docs });
+                // io.to(userList[info.userName]).emit('chatLists', { code: 0, data: docs });
+                io.to(socket.id).emit('chatLists', { code: 0, data: docs });
                 // var msg = "呜呜呜，我只会加减乘除，试试问我1+2-3*4/5吧"
                 // try {
                 //     msg = eval(docs[0].userChat);

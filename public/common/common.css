@@ -159,7 +159,7 @@ html,body{
     background: #fff;
     padding-left: 15px;
     font-size: 16px;
-    position: fixed;
+    position: absolute;
     top: 0;
     z-index: 9;
 }

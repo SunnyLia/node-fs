@@ -34,24 +34,16 @@
         var resData = '<%- JSON.stringify(chatLists) %>';
         layui.use(['layer'], function () {
             var user = window.sessionStorage.getItem("user");
-            var socket = io();
-            socket.on('connect', function () {
-                console.log("socket connect");
-                socket.emit('join', { id: getQuery("roomId"), user: user }, function (num) {
-                    $("#userCount").text("(" + num + ")")
-                });
-            });
-            socket.on('disconnect', () => {
-                console.log("socket disconnect");
-                // socket.open();
-            });
-            socket.on('chatLists', function (data) {
-                if (data.code == 0) {
-                    chatListRend(data.data)
-                } else {
-                    layer.msg(data.msg.name)
-                }
-            });
+            // socket.emit('join', { id: getQuery("roomId"), user: user }, function (num) {
+            //     $("#userCount").text("(" + num + ")")
+            // });
+            // socket.on('chatLists', function (data) {
+            //     if (data.code == 0) {
+            //         chatListRend(data.data)
+            //     } else {
+            //         layer.msg(data.msg.name)
+            //     }
+            // });
             socket.on('inORout', function (data) {
                 var str = '<div id="inORout"><span>' + data.msg + '</span></div>';
                 $("#chatList").append(str);
@@ -76,7 +68,7 @@
                     var sendData = {
                         msg: msg,
                         userName: user,
-                        toWho:getQuery("roomName"),
+                        toWho: getQuery("roomName"),
                         roomId: getQuery("roomId"),
                         // userId: ($(".self").length > 0 ? $(".self").eq(0).attr("data-id") : null)
                     }
@@ -112,15 +104,23 @@
                 } else {
                     var roomId = $(e.currentTarget).parent().attr("data-id");
                     var title = $(e.currentTarget).next().find(".name").text();
-                    layer.open({
-                        type: 2,
-                        title: false,
-                        closeBtn: 0,
-                        area: ['375px', '667px'],
-                        content: ['/chatRoom.htm?roomId=' + roomId + "&roomName=" + escape(title)]
-                    });
+                    openNewPage(roomId, title)
                 }
             })
+            socket.on('openNewPage', function (data) {
+                console.log(data);
+                
+                openNewPage(data.roomId, data.roomName)
+            });
+            function openNewPage(roomId, roomName) {
+                layer.open({
+                    type: 2,
+                    title: false,
+                    closeBtn: 0,
+                    area: ['375px', '667px'],
+                    content: ['/chatRoom.htm?roomId=' + roomId + "&roomName=" + escape(roomName)]
+                });
+            }
         })
     </script>
 </body>
