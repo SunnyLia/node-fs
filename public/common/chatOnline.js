@@ -1,7 +1,7 @@
 layui.use(['form', 'layer'], function () {
     var form = layui.form
         , layer = layui.layer,
-        curPage=""
+        curPage = ""
     var socket = io();
     socket.on('connect', function () {
         console.log("socket connect");
@@ -10,6 +10,11 @@ layui.use(['form', 'layer'], function () {
         console.log("socket disconnect");
         // socket.open();
     });
+    var user = window.sessionStorage.getItem("user");
+    // 刷新页面登陆
+    if (user) {
+        socket.emit('login', { user: user });
+    }
     // input回车发送
     $("#chatWord").keypress(function (e) {
         if (e.which == 13) {
@@ -17,6 +22,10 @@ layui.use(['form', 'layer'], function () {
         }
     });
     // 监听消息返回
+    socket.on('oldChat', function (data) {
+        $("#chatList").html("");
+        chatListRend(data.data)
+    })
     socket.on('chatLists', function (data) {
         if (data.code == 0) {
             chatListRend(data.data)
@@ -28,8 +37,9 @@ layui.use(['form', 'layer'], function () {
     socket.on('inORout', function (data) {
         var str = '<div id="inORout"><span>' + data.msg + '</span></div>';
         $("#chatList").append(str);
-        var title = $(layero).find(".layui-layer-title").text();
-        $(layero).find(".layui-layer-title").text(title + " (" + data.count + ")")
+        $("#userCount").text("(" + data.count + ")")
+        $("#chatRoom").scrollTop($("#chatRoom")[0].scrollHeight - $("#chatRoom")[0].offsetHeight);
+
     });
     // 渲染消息
     function chatListRend(data) {
@@ -45,37 +55,28 @@ layui.use(['form', 'layer'], function () {
                 '</div>'
         }
         $("#chatList").append(str);
+        $("#chatRoom").scrollTop($("#chatRoom")[0].scrollHeight - $("#chatRoom")[0].offsetHeight);
     }
     // 聊天列表点击事件
     $("#chatLists").on("click", ".chatItem", function (e) {
-        var user = window.sessionStorage.getItem("user")
+        var roomId = $(e.currentTarget).attr("data-id");
+        var title = $(e.currentTarget).find(".chatTitle").text();
         if (!user) {
             layer.prompt({ title: '请先创建聊天身份', formType: 3 }, function (pass, index) {
+                user = pass;
                 window.sessionStorage.setItem("user", pass);
+                socket.emit('login', { user: user });
                 layer.close(index)
+                openNewPage(roomId, title);
             });
         } else {
-            socket.emit('login', { user: user });
-
-            var roomId = $(e.currentTarget).attr("data-id");
-            var title = $(e.currentTarget).find(".chatTitle").text();
-            layer.open({
-                type: 1,
-                title: title,
-                area: ['375px', '667px'],
-                content: $("#chatRoom"),
-                success: function (layero, index) {
-                    curPage = layero;
-                    socket.emit('join', { id: roomId, user: title }, function (num) {
-                        $(layero).find(".layui-layer-title").text(title + " (" + num + ")")
-                    });
-                },
-                cancle: function () {
-                    socket.emit('inORout', title);
-                }
-
-            });
+            openNewPage(roomId, title);
         }
+    })
+    // 弹框关闭事件
+    $(".layui-icon-close").on("click", function () {
+        socket.emit('inORout', user);
+        layer.close(curPage);
     })
     // 发送事件
     $("#send-btn").on("click", function () {
@@ -84,14 +85,48 @@ layui.use(['form', 'layer'], function () {
             var sendData = {
                 msg: msg,
                 userName: user,
-                toWho: getQuery("roomName"),
-                roomId: getQuery("roomId"),
-                // userId: ($(".self").length > 0 ? $(".self").eq(0).attr("data-id") : null)
+                toWho: $("#roomName").text(),
+                roomId: $("#roomName").attr("data-id"),
             }
             socket.emit('sendMsg', sendData);
             $("#chatWord").val("")
         }
     })
+    // 点击他人聊天
+    $("#chatList").on("click", ".author", function (e) {
+        if ($(e.currentTarget).parent().hasClass("self")) {
+            return false;
+        } else {
+            // layer.confirm('确定要离开当前页面嘛?', function (index) {
+            layer.close(curPage);
+            var roomId = $(e.currentTarget).parent().attr("data-id");
+            var title = $(e.currentTarget).next().find(".name").text();
+            openNewPage(roomId, title)
+            // });
+        }
+    })
+    socket.on('openNewPage', function (data) {
+        openNewPage(data.roomId, data.roomName)
+    });
+    function openNewPage(roomId, roomName) {
+        layer.open({
+            type: 1,
+            // title: title,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+            title: false,
+            closeBtn: 0,
+            area: ['375px', '667px'],
+            content: $("#chatRoom"),
+            success: function (layero, index) {
+                curPage = index;
+                $("#roomName").text(roomName);
+                $("#roomName").attr("data-id", roomId);
+
+                socket.emit('join', { roomId: roomId, user: user }, function (num) {
+                    $("#userCount").text(" (" + num + ")")
+                });
+            }
+        });
+    }
     function getQuery(name) {
         var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
         var r = window.location.search.substr(1).match(reg);
