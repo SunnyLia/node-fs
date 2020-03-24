@@ -70,6 +70,7 @@ layui.use(['form', 'layer'], function () {
                 userName: user,
                 toWho: $("#roomName").text(),
                 roomId: $("#roomName").attr("data-id"),
+                userId: ($(".self").length > 0 ? $(".self").eq(0).attr("data-id") : null)
             }
             socket.emit('sendMsg', sendData);
             $("#chatWord").val("")
@@ -104,7 +105,7 @@ layui.use(['form', 'layer'], function () {
         for (var i = 0; i < data.length; i++) {
             var name = data[i].userName;
             str +=
-                '<div class="chatItem' + (name == user ? " self" : "") + '" style="padding: 10px;" data-id="single003">' +
+                '<div class="chatItem' + (name == user ? " self" : "") + '" style="padding: 10px;" data-id="' + data[i].userId + '">' +
                 '<div class="author">' + (name == user ? "我" : name.slice(0, 2)) + '</div>' +
                 '<div class="time"><span style="font-weight:bold" class="name">' + (name == user ? "" : name) + '</span>' +
                 '<span> ' + (data[i].userChatTime ? data[i].userChatTime : "") + '</span></div>' +

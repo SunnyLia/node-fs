@@ -15,7 +15,7 @@ exports.socket1 = function (io) {
         socket.on('join', function (info, fn) {
             info1 = info;
             socket.join(info.roomId); //添加到房间
-            if (info.roomId && info.roomId.indexOf("single") == -1) {
+            if (info.roomId && info.roomId.indexOf("group") != -1) {
                 if (socket.adapter.rooms[info.roomId]) {
                     info1["count"] = socket.adapter.rooms[info.roomId].length;
                 }
@@ -46,7 +46,8 @@ exports.socket1 = function (io) {
         /* 进入退出 */
         socket.on('inORout', function (info) {
             socket.leave(info1.roomId) //退出聊天室
-            if (info1.roomId && info1.roomId.indexOf("single") == -1) {
+
+            if (info1.roomId && info1.roomId.indexOf("group") != -1) {
                 if (socket.adapter.rooms[info1.roomId]) {
                     info1["count"] = socket.adapter.rooms[info1.roomId].length;
                 }
@@ -59,12 +60,12 @@ exports.socket1 = function (io) {
                 userName: info.userName,
                 userChat: info.msg,
                 userChatTime: dateFormat(new Date()),
-                roomId: info.roomId
+                roomId: info.roomId,
+                userId: info.userId || (new Date()).getTime() + ""
             }]
-            console.log(info.roomId);
-            console.log(info1.roomId);
+
             // 这里是群聊
-            if (info1.roomId && info1.roomId.indexOf("single") == -1) {
+            if (info1.roomId && info1.roomId.indexOf("group") != -1) {
                 io.to(info1.roomId).emit('chatLists', { code: 0, data: docs }); //发送给房间所有人
 
                 MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
@@ -77,35 +78,33 @@ exports.socket1 = function (io) {
                     })
                 });
             } else { //这是单聊
+                io.to(socket.id).emit('chatLists', { code: 0, data: docs });//发给请求人
 
-                if (!userList[info.toWho]) { //用户未登陆，提示
-                    io.to(socket.id).emit('chatLists', { code: 2, data: docs, msg: "当前用户不在线" }); //给请求人发消息
+                if (info.toWho == "机器喵") {
+                    var msg = "呜呜呜，我只会加减乘除，试试问我1+2-3*4/5吧"
+                    try {
+                        msg = eval(docs[0].userChat);
+                    } catch (err) { }
+                    io.to(socket.id).emit('chatLists', { code: 0, data: [{ "userName": "机器喵", "userChat": msg }] });
                 } else {
-                    console.log(socket);
-                    console.log(socket.adapter.rooms);
-                    
-                    if (!socket.adapter.rooms[info.roomId].sockets[userList[info.toWho]]) { //用户不在当前聊天室
-                        io.to(userList[info.toWho]).emit('openNewPage', { roomId: info.roomId, roomName: info.userName, msg: docs });
+                    if (!userList[info.toWho]) { //用户未登陆，提示
+                        io.to(socket.id).emit('chatLists', { code: 2, data: docs, msg: "当前用户不在线" }); //给请求人发消息
                     } else {
-                        io.to(userList[info.toWho]).emit('chatLists', { code: 0, data: docs });
+                        var exRoomId = socket.adapter.rooms[info.roomId];
+                        if (exRoomId && exRoomId.sockets[userList[info.toWho]]) {
+                            io.to(userList[info.toWho]).emit('chatLists', { code: 0, data: docs });
+                        } else {//用户不在当前聊天室，消息提醒
+                            io.to(userList[info.toWho]).emit('openNewPage', { roomId: info.roomId, roomName: info.userName, msg: docs });
+                        }
                     }
                 }
-                io.to(socket.id).emit('chatLists', { code: 0, data: docs });
-
-                // var msg = "呜呜呜，我只会加减乘除，试试问我1+2-3*4/5吧"
-                // try {
-                //     msg = eval(docs[0].userChat);
-                // } catch (err) { }
-                // io.to(socket.id).emit('chatLists', {
-                //     code: 0, data:
-                //         [{ "userName": "机器喵", "userChat": msg }]
-                // });
             }
         })
         socket.on('disconnect', async function () {
             // console.log("用户下线");
-            socket.leave(info1.roomId) //退出聊天室
-            if (info1.roomId && info1.roomId.indexOf("single") == -1) {
+            socket.leave(info1.roomId); //退出聊天室
+            delete userList[info1.user]; //删除用户登录信息
+            if (info1.roomId && info1.roomId.indexOf("group") != -1) {
                 if (socket.adapter.rooms[info1.roomId]) {
                     info1["count"] = socket.adapter.rooms[info1.roomId].length;
                 }
@@ -117,11 +116,3 @@ exports.socket1 = function (io) {
 const dateFormat = function (date) {
     return moment(date).format('YYYY/MM/DD HH:mm:ss');
 }
-
-
-// socket.client.conn.server//里面有客户端总数
-// socket.client.conn.server.clients//里面为各客户的socketid
-// socket.client.server.sockets.socket//里面为各客户端socketid对象
-// socket.client.sockets //为当前客户端socketid对象
-// socket.rooms//里面为当前客户的socketid及去过的roomid
-// socket.server.sockets.connected//里面有连接过的socketid对象
