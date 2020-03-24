@@ -18,12 +18,12 @@ layui.use(['form', 'layer'], function () {
             $("#send-btn").click();
         }
     });
-    // 监听old消息返回
+    // 监听旧消息
     socket.on('oldChat', function (data) {
-        $("#chatList").html("");
+        // $("#chatList").html("");
         chatListRend(data.data)
     })
-    // 消息检测
+    // 新消息监测
     socket.on('chatLists', function (data) {
         if (data.code == 0) {
             chatListRend(data.data)
@@ -39,25 +39,8 @@ layui.use(['form', 'layer'], function () {
         $("#chatList").append(str);
         $("#userCount").text("(" + data.count + ")")
         $("#chatRoom").scrollTop($("#chatRoom")[0].scrollHeight - $("#chatRoom")[0].offsetHeight);
-
     });
-    // 渲染消息
-    function chatListRend(data) {
-        var str = "";
-        for (var i = 0; i < data.length; i++) {
-            var name = data[i].userName;
-            str +=
-                '<div class="chatItem' + (name == user ? " self" : "") + '" style="padding: 10px;" data-id="single003">' +
-                '<div class="author">' + (name == user ? "我" : name.slice(0, 2)) + '</div>' +
-                '<div class="time"><span style="font-weight:bold" class="name">' + (name == user ? "" : name) + '</span>' +
-                '<span> ' + (data[i].userChatTime ? data[i].userChatTime : "") + '</span></div>' +
-                '<div class="massage">' + data[i].userChat + '</div>' +
-                '</div>'
-        }
-        $("#chatList").append(str);
-        $("#chatRoom").scrollTop($("#chatRoom")[0].scrollHeight - $("#chatRoom")[0].offsetHeight);
-    }
-    // 聊天列表点击事件
+    // 聊天列表点击聊天事件
     $("#chatLists").on("click", ".chatItem", function (e) {
         var roomId = $(e.currentTarget).attr("data-id");
         var title = $(e.currentTarget).find(".chatTitle").text();
@@ -78,7 +61,7 @@ layui.use(['form', 'layer'], function () {
         socket.emit('inORout', user);
         layer.closeAll();
     })
-    // 发送事件
+    // 发送消息事件
     $("#send-btn").on("click", function () {
         var msg = $("#chatWord").val();
         if (msg.trim() != "") {
@@ -92,7 +75,7 @@ layui.use(['form', 'layer'], function () {
             $("#chatWord").val("")
         }
     })
-    // 点击跟他人聊天
+    // 点击列表跟他人聊天
     $("#chatList").on("click", ".author", function (e) {
         if ($(e.currentTarget).parent().hasClass("self")) {
             return false;
@@ -106,10 +89,8 @@ layui.use(['form', 'layer'], function () {
             });
         }
     })
-    //新消息弹框
+    //有其他的消息弹框提醒
     socket.on('openNewPage', function (data) {
-        console.log(data);
-        
         layer.confirm('有新的消息进来了哦~', function (index) {
             layer.closeAll();
             socket.emit('inORout', user);
@@ -117,6 +98,23 @@ layui.use(['form', 'layer'], function () {
             chatListRend(data.msg)
         });
     });
+    // 渲染新消息
+    function chatListRend(data) {
+        var str = "";
+        for (var i = 0; i < data.length; i++) {
+            var name = data[i].userName;
+            str +=
+                '<div class="chatItem' + (name == user ? " self" : "") + '" style="padding: 10px;" data-id="single003">' +
+                '<div class="author">' + (name == user ? "我" : name.slice(0, 2)) + '</div>' +
+                '<div class="time"><span style="font-weight:bold" class="name">' + (name == user ? "" : name) + '</span>' +
+                '<span> ' + (data[i].userChatTime ? data[i].userChatTime : "") + '</span></div>' +
+                '<div class="massage">' + data[i].userChat + '</div>' +
+                '</div>'
+        }
+        $("#chatList").append(str);
+        $("#chatRoom").scrollTop($("#chatRoom")[0].scrollHeight - $("#chatRoom")[0].offsetHeight);
+    }
+    // 打开弹框
     function openNewPage(roomId, roomName) {
         $("#userCount").text("");
         $("#chatList").html("");
@@ -128,7 +126,6 @@ layui.use(['form', 'layer'], function () {
             area: ['375px', '667px'],
             content: $("#chatRoom"),
             success: function (layero, index) {
-                curPage = index;
                 $("#roomName").text(roomName);
                 $("#roomName").attr("data-id", roomId);
                 socket.emit('join', { roomId: roomId, user: user }, function (num) {
@@ -136,13 +133,5 @@ layui.use(['form', 'layer'], function () {
                 });
             }
         });
-    }
-    function getQuery(name) {
-        var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
-        var r = window.location.search.substr(1).match(reg);
-        if (r != null) {
-            return unescape(r[2]);
-        }
-        return null;
     }
 })
