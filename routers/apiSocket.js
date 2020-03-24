@@ -51,7 +51,7 @@ exports.socket1 = function (io) {
                 if (socket.adapter.rooms[info1.roomId]) {
                     info1["count"] = socket.adapter.rooms[info1.roomId].length;
                 }
-                socket.broadcast.to(info1.roomId).emit('inORout', { msg: info1.user + "退出群聊", count: info1.count - 1 });
+                socket.broadcast.to(info1.roomId).emit('inORout', { msg: info1.user + "退出群聊", count: info1.count });
             }
         })
         /* 消息监测 */
