@@ -162,11 +162,11 @@ html,body{
     position: absolute;
     top: 0;
     z-index: 9;
+    box-sizing: border-box;
 }
 #chatTop .layui-icon-close{
     font-size: 22px;
     float: right;
-    margin-right: 15px;
     padding: 0 10px;
     cursor: pointer;
 }
