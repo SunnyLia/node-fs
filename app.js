@@ -6,15 +6,15 @@ var io = require('socket.io')(http);
 
 var com = require("./routers");
 var table = require("./routers/table");
-var chatOnline = require("./routers/chatOnline");
 var apiSocket = require("./routers/apiSocket");
 
 app.use(express.static('./public'))
 app.set("view engine", "ejs");
 
 /* 在线聊天 */
-app.get('/chatOnline', chatOnline.getChat);
-app.get('/chatRoom.htm', chatOnline.chatRoom);
+app.get('/chatOnline', function (req, res) {
+    res.render("chatOnline")
+});
 
 /* table列表 */
 app.get('/table', table.poetry);

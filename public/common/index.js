@@ -15,7 +15,7 @@ $("body").click(function () {
 })
 $("body").on("contextmenu", function (e) {
     $("#menu").hide()
-    $("#bodyMenu").show().css({ top: e.clientY-60, left: e.clientX });
+    $("#bodyMenu").show().css({ top: e.clientY - 60, left: e.clientX });
     return false;
 })
 //鼠标右击
@@ -27,7 +27,7 @@ $("#foldList").on("contextmenu", "li", function (e) {
     name = $(e.currentTarget).attr("name"); //获取到文件名
     $(this).addClass("active").siblings().removeClass("active");
     $("#bodyMenu").hide();
-    $("#menu").show().css({ top: e.clientY-60, left: e.clientX });
+    $("#menu").show().css({ top: e.clientY - 60, left: e.clientX });
     return false
 })
 //鼠标双击
