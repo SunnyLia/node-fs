@@ -35,7 +35,7 @@ exports.socket1 = function (io) {
                         }
 
                         io.to(info1.roomId).emit('chatLists', {
-                            code: 0, data: [{ "userName": "机器喵", "userChat": "欢迎" + info1.user + "童鞋加入群聊~" }]
+                            code: 0, data: [{ "userName": "机器喵","userId": "single003", "userChat": "欢迎" + info1.user + "童鞋加入群聊~" }]
                         });//发送给房间所有人
                         client.close();
                     })

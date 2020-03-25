@@ -92,7 +92,7 @@ layui.use(['form', 'layer'], function () {
     })
     //有其他的消息弹框提醒
     socket.on('openNewPage', function (data) {
-        layer.confirm('有新的消息进来了哦~', function (index) {
+        layer.confirm('有来自' + data.roomName + '的新消息~', function (index) {
             layer.closeAll();
             socket.emit('inORout', user);
             openNewPage(data.roomId, data.roomName);
