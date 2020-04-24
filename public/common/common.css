@@ -116,12 +116,12 @@ html,body{
 }
 
 /* table页面 */
-.layui-input-block{
-    margin-left: 80px;
+#sendTime .layui-form-checkbox,#sendCont .layui-form-switch{
+    position: absolute;
+    top: 0;
+    right: 0;
 }
-.layui-form-label{
-    width: 50px;
-}
+
 /* 在线聊天页面 */
 #chatOnline .chatUses{
     height:80px;

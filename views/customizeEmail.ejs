@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>定制邮件</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <link rel="stylesheet" href="/common/common.css">
+</head>
+
+<body class="layui-layout-body">
+    <div id="node_folder" class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo">NODE</div>
+            <ul class="layui-nav layui-layout-left">
+                <li class="layui-nav-item"><a href="/">文件操作</a></li>
+                <li class="layui-nav-item"><a href="/table">数据操作</a></li>
+                <li class="layui-nav-item"><a href="/chatOnline">在线聊天</a></li>
+                <li class="layui-nav-item layui-this"><a href="javascript:;">定制邮件</a></li>
+            </ul>
+        </div>
+        <div class="layui-body">
+            <form class="layui-form" id="formList">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">发邮件人:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="sendMan" lay-verify="required" placeholder="请输入" autocomplete="off"
+                                class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">收邮件人:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="getMan" lay-verify="required" placeholder="请输入" autocomplete="off"
+                                class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">邮件主题:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="sendTitle" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline" id="sendTime">
+                        <label class="layui-form-label">发送时间:</label>
+                        <div class="layui-input-block" style="margin-right:120px">
+                            <input type="text" name="sendTime" id="sendInp" placeholder="请输入" disabled autocomplete="off"
+                                class="layui-input">
+                        </div>
+                        <input type="checkbox" name="sendAtOnce" checked title="立即发送" lay-skin="primary" lay-filter="sendNow">
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">内容来源:</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="switch" lay-skin="switch" lay-text="爬取|输入" lay-filter="sendSwitch">
+                        </div>
+                    </div>
+                    <div class="layui-inline" id="sendCont">
+                        <label class="layui-form-label">发送内容:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="contText" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline crawlCont" style="display:none">
+                        <label class="layui-form-label">抓取网站:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="sendNet" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline crawlCont" style="display:none">
+                        <label class="layui-form-label">爬取元素:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="sendDiv" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit lay-filter="formList">查看</button>
+                            <button type="reset" class="layui-btn layui-btn-primary">清空</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="layui-collapse" lay-accordion style="margin-top:50px">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">查看内容</h2>
+                    <div class="layui-colla-content">hello world</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/common/jquery-1.11.3.min.js"></script>
+    <script src="/layui/layui.js"></script>
+    <script src="/common/email.js"></script>
+</body>
+
+</html>

@@ -6,10 +6,15 @@ var io = require('socket.io')(http);
 
 var com = require("./routers");
 var table = require("./routers/table");
+var sendEmail = require("./routers/email");
 var apiSocket = require("./routers/apiSocket");
 
 app.use(express.static('./public'))
 app.set("view engine", "ejs");
+
+/* 定制邮件 */
+app.get('/customizeEmail', sendEmail.email);
+app.get('/sendCont', sendEmail.send);
 
 /* 在线聊天 */
 app.get('/chatOnline', function (req, res) {
