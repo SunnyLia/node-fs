@@ -1,20 +1,41 @@
-const formidable = require('formidable');
-exports.email = function (req, res) {
-    res.render("customizeEmail")
-}
-exports.send = function (req, res) {
-    console.log(req.query)
-}
 const nodemailer = require("nodemailer");
 const schedule = require('node-schedule');
 const superagent = require('superagent')
 const cheerio = require('cheerio')
 const charset = require("superagent-charset");
 charset(superagent); //设置字符
+exports.email = function (req, res) {
+    res.render("customizeEmail")
+}
+exports.send = function (req, res) {
+    if (req.query.sendAtOnce) { //立即发送
+        sendMail(req.query.sendMan, req.query.getMan, req.query.sendTitle, req.query.contText)
+    } else { //定时发送
+        schedule.scheduleJob(req.query.sendTime, () => {
+            if (req.query.sendFrom) { //为抓取
+                let askUrl = req.query.sendNet || "http://news.people.com.cn/GB/28053/index.html";
+                let askDiv = req.query.sendDiv || "table .anavy";
+                superagent.get(askUrl).charset('gbk').end((err, result) => {
+                    if (err) {
+                        console.log(`抓取失败 - ${err}`)
+                    } else {
+                        let $ = cheerio.load(result.text, { decodeEntities: false });
+                        let content = "";
+                        $(askDiv).each((idx, ele) => {
+                            content += '<li>' + $(ele).text() + '</li>';
+                        });
+
+                        sendMail(req.query.sendMan, req.query.getMan, req.query.sendTitle, '<ul>' + content + '</ul>')
+                    }
+                });
+            } else { //为输入
+                sendMail(req.query.sendMan, req.query.getMan, req.query.sendTitle, req.query.contText)
+            }
+        });
+    }
+}
 
 var sendDate = "0 0 9 * * *";//设置发送时间
-var fromPerson = "张张你大爷<1218294773@qq.com>" //发送者
-var toPerson = "1326155622@qq.com" //接收者。可以发送多个用户，用逗号隔开
 
 /* 发送邮件 */
 function sendMail(from, to, subject, content) {
@@ -41,7 +62,7 @@ function sendMail(from, to, subject, content) {
     })
 }
 
-/* 
+/*
 schedule参数讲解
 * * * * * *
 ┬ ┬ ┬ ┬ ┬ ┬
@@ -68,21 +89,3 @@ schedule参数讲解
 // getNews()
 // });
 // }
-
-/*爬取人民网新闻*/
-function getNews() {
-    superagent.get('http://news.people.com.cn/GB/28053/index.html').charset('gbk').end((err, res) => {
-        if (err) {
-            console.log(`热点新闻抓取失败 - ${err}`)
-        } else {
-            let $ = cheerio.load(res.text, { decodeEntities: false });
-            let content = "";
-            $('table .anavy').each((idx, ele) => {
-                content += '<li><a href="' + $(ele).attr("href") + '" style="font-size:12px">' + $(ele).text() + '</a></li>'
-            });
-            let subject = $(".t12l12blackb")[0] //主题
-
-            sendMail(fromPerson, toPerson, $(subject).text() + ' | 新闻早报', '<ul>' + content + '</ul>')
-        }
-    });
-}

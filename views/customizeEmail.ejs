@@ -50,12 +50,12 @@
                             <input type="text" name="sendTime" id="sendInp" placeholder="请输入" disabled autocomplete="off"
                                 class="layui-input">
                         </div>
-                        <input type="checkbox" name="sendAtOnce" checked title="立即发送" lay-skin="primary" lay-filter="sendNow">
+                        <input type="checkbox" name="sendAtOnce" checked value="1" title="立即发送" lay-skin="primary" lay-filter="sendNow">
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">内容来源:</label>
                         <div class="layui-input-block">
-                            <input type="checkbox" name="switch" lay-skin="switch" lay-text="爬取|输入" lay-filter="sendSwitch">
+                            <input type="checkbox" name="sendFrom" lay-skin="switch" value="1" lay-text="爬取|输入" lay-filter="sendSwitch">
                         </div>
                     </div>
                     <div class="layui-inline" id="sendCont">

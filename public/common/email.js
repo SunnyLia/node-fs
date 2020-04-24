@@ -21,7 +21,7 @@ layui.use(['form', 'element'], function () {
     });
     // 查看
     form.on('submit(formList)', function (data) {
-        console.log(data);
+        console.log(data.field);
         
         var queryData = $('#formList').serializeArray().reduce(function (obj, item) {
             if (item.value) {
